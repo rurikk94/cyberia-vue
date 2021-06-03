@@ -2,6 +2,9 @@
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\NegocioController;
+use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\MaterialController;
 use Inertia\Inertia;
 
 /*
@@ -27,5 +30,23 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/negocios', [NegocioController::class, 'index'])->middleware(['auth', 'verified'])->name('negocios');
+Route::post('/negocios', [NegocioController::class, 'store'])->middleware(['auth', 'verified'])->name('negocios.add');
+Route::delete('/negocios/{id}', [NegocioController::class, 'destroy'])->middleware(['auth', 'verified'])->name('negocios.delete');
+Route::put('/negocios/{id}', [NegocioController::class, 'update'])->middleware(['auth', 'verified'])->name('negocios.update');
+
+Route::get('/clientes',[ClienteController::class, 'index'])->middleware(['auth', 'verified'])->name('clientes');
+Route::post('/clientes',[ClienteController::class, 'store'])->middleware(['auth', 'verified'])->name('clientes.add');
+Route::delete('/clientes/{id}',[ClienteController::class, 'destroy'])->middleware(['auth', 'verified'])->name('clientes.delete');
+Route::put('/clientes/{id}',[ClienteController::class, 'update'])->middleware(['auth', 'verified'])->name('clientes.update');
+
+
+Route::get('/materiales',[MaterialController::class, 'index'])->middleware(['auth', 'verified'])->name('materiales');
+Route::post('/materiales',[MaterialController::class, 'store'])->middleware(['auth', 'verified'])->name('materiales.add');
+Route::delete('/materiales/{id}',[MaterialController::class, 'destroy'])->middleware(['auth', 'verified'])->name('materiales.delete');
+Route::put('/materiales/{id}',[MaterialController::class, 'update'])->middleware(['auth', 'verified'])->name('materiales.update');
+
+Route::get('/negocios/{id}/materiales', [NegocioMaterialesController::class, 'show'])->middleware(['auth', 'verified'])->name('negocios.materiales');
 
 require __DIR__.'/auth.php';

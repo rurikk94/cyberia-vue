@@ -5,6 +5,16 @@ import { createApp, h } from 'vue';
 import { App as InertiaApp, plugin as InertiaPlugin } from '@inertiajs/inertia-vue3';
 import { InertiaProgress } from '@inertiajs/progress';
 
+import 'bootstrap';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+import moshaToast from 'mosha-vue-toastify'
+import 'mosha-vue-toastify/dist/style.css'
+
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
+
 const el = document.getElementById('app');
 
 createApp({
@@ -16,6 +26,8 @@ createApp({
 })
     .mixin({ methods: { route } })
     .use(InertiaPlugin)
+    .use(moshaToast)
+    .use(VueSweetalert2)
     .mount(el);
 
 InertiaProgress.init({ color: '#4B5563' });
