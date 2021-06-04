@@ -6,21 +6,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class MetadatosCliente extends Model
+class MetadatosUsuario extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
     protected $fillable = [
-        'cliente_id',
+        'user_id',
         'key',
         'value'
     ];
 
     protected $dates = ['deleted_at'];
 
-    public function cliente()
+    public function user()
     {
-        return $this->belongsTo(Cliente::class, 'cliente_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

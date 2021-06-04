@@ -7,6 +7,7 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\NegocioMaterialController;
 use App\Http\Controllers\MetadatosClienteController;
+use App\Http\Controllers\MetadatosUsuarioController;
 use Inertia\Inertia;
 
 /*
@@ -58,5 +59,10 @@ Route::put('/negocios/material/{id}', [NegocioMaterialController::class, 'update
 Route::post('/clientes/metadato',[MetadatosClienteController::class, 'store'])->middleware(['auth', 'verified'])->name('clientes.metadato.add');
 Route::put('/clientes/{id}/metadato',[MetadatosClienteController::class, 'update'])->middleware(['auth', 'verified'])->name('clientes.metadato.update');
 Route::delete('/clientes/{id}/metadato', [MetadatosClienteController::class, 'destroy'])->middleware(['auth', 'verified'])->name('clientes.metadato.delete');
+
+Route::get('/profile',[MetadatosUsuarioController::class, 'index'])->middleware(['auth', 'verified'])->name('profile');
+Route::post('/profile/metadato',[MetadatosUsuarioController::class, 'store'])->middleware(['auth', 'verified'])->name('profile.metadato.add');
+Route::put('/profile/{id}/metadato',[MetadatosUsuarioController::class, 'update'])->middleware(['auth', 'verified'])->name('profile.metadato.update');
+Route::delete('/profile/{id}/metadato', [MetadatosUsuarioController::class, 'destroy'])->middleware(['auth', 'verified'])->name('profile.metadato.delete');
 
 require __DIR__.'/auth.php';

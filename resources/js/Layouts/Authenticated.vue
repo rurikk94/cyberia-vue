@@ -34,6 +34,11 @@
                                     Materiales
                                 </breeze-nav-link>
                             </div>
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <breeze-nav-link :href="route('profile')" :active="route().current('profile')">
+                                    Mis datos
+                                </breeze-nav-link>
+                            </div>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
