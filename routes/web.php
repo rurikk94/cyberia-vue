@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NegocioController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\NegocioMaterialController;
 use Inertia\Inertia;
 
 /*
@@ -47,6 +48,9 @@ Route::post('/materiales',[MaterialController::class, 'store'])->middleware(['au
 Route::delete('/materiales/{id}',[MaterialController::class, 'destroy'])->middleware(['auth', 'verified'])->name('materiales.delete');
 Route::put('/materiales/{id}',[MaterialController::class, 'update'])->middleware(['auth', 'verified'])->name('materiales.update');
 
-Route::get('/negocios/{id}/materiales', [NegocioMaterialesController::class, 'show'])->middleware(['auth', 'verified'])->name('negocios.materiales');
+Route::get('/negocios/{id}/material', [NegocioMaterialController::class, 'show'])->middleware(['auth', 'verified'])->name('negocios.material');
+Route::post('/negocios/{id}/material', [NegocioMaterialController::class, 'store'])->middleware(['auth', 'verified'])->name('negocios.material.add');
+Route::delete('/negocios/material/{id}', [NegocioMaterialController::class, 'destroy'])->middleware(['auth', 'verified'])->name('negocios.material.delete');
+Route::put('/negocios/material/{id}', [NegocioMaterialController::class, 'update'])->middleware(['auth', 'verified'])->name('negocios.material.update');
 
 require __DIR__.'/auth.php';
