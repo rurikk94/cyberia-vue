@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Cliente;
 use App\Models\MetadatosCliente;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
-use Illuminate\Support\Facades\Redirect;
 
-class ClienteController extends Controller
+class MetadatosClienteController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,12 +16,6 @@ class ClienteController extends Controller
     public function index()
     {
         //
-        $user = Auth::user();
-        $clientes = Cliente::where('electricista_id', $user->id)->get();
-
-        return Inertia::render('Clientes',[
-            'clientes' => $clientes
-        ]);
     }
 
     /**
@@ -46,57 +37,45 @@ class ClienteController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nombres' => 'required|string|max:191',
-            'apellidos' => 'required|string|max:191',
+            'key' => 'required|string|max:100',
+            'value' => 'required|string|max:100',
+            'cliente_id' => 'required|integer',
         ]);
 
 
-        $cliente = new Cliente;
-        $user = Auth::user();
+        $metadato = new MetadatosCliente;
+        //$user = Auth::user();
 
-        $cliente->nombres = $request->nombres;
-        $cliente->apellidos = $request->apellidos;
-        $cliente->electricista_id = $user->id;
+        $metadato->key = $request->key;
+        $metadato->value = $request->value;
+        $metadato->cliente_id = $request->cliente_id;
 
-        $cliente->save();
+        $metadato->save();
 
-        $data = $cliente->refresh()->toArray();
+        $data = $metadato->refresh()->toArray();
         return response()->json([
-            'cliente' => $data
+            'metadato' => $data
         ], 200);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\MetadatosCliente  $metadatosCliente
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(MetadatosCliente $metadatosCliente)
     {
         //
-        $user = Auth::user();
-        $cliente = Cliente::where('id', $id)
-            ->with('metadatos')->first();
-
-        if( !$cliente || $cliente->electricista_id != $user->id)
-        return response()->json([
-            'message' => 'Error: the cliente no existe.'], 412);
-
-        //$cliente_metadatos = MetadatosCliente::find($id);
-
-        return Inertia::render('Cliente',[
-            'cliente' => $cliente
-        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\MetadatosCliente  $metadatosCliente
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(MetadatosCliente $metadatosCliente)
     {
         //
     }
@@ -111,38 +90,38 @@ class ClienteController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'nombres' => 'required|string|max:191',
-            'apellidos' => 'required|string|max:191',
+            'value' => 'required|string|max:100',
         ]);
 
-        $cliente = Cliente::find($id);
+        $metadato = MetadatosCliente::find($id);
         $user = Auth::user();
 
-        $cliente->nombres = $request->nombres;
-        $cliente->apellidos = $request->apellidos;
+        $metadato->value = $request->value;
 
-        $cliente->save();
+        $metadato->save();
 
-        $data = $cliente->refresh()->toArray();
+        $data = $metadato->refresh()->toArray();
         return response()->json([
-            'cliente' => $data
+            'metadato' => $data
         ], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
+     * @param  \App\Models\MetadatosCliente  $metadatosCliente
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request, $id)
     {
         //
+        //
         $user = Auth::user();
 
-        Cliente::destroy($id);
+        MetadatosCliente::destroy($id);
         return response()->json([
-            'cliente' => $id
+            'metadato' => $id
         ], 200);
     }
 }

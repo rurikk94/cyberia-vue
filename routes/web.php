@@ -6,6 +6,7 @@ use App\Http\Controllers\NegocioController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\NegocioMaterialController;
+use App\Http\Controllers\MetadatosClienteController;
 use Inertia\Inertia;
 
 /*
@@ -38,6 +39,7 @@ Route::delete('/negocios/{id}', [NegocioController::class, 'destroy'])->middlewa
 Route::put('/negocios/{id}', [NegocioController::class, 'update'])->middleware(['auth', 'verified'])->name('negocios.update');
 
 Route::get('/clientes',[ClienteController::class, 'index'])->middleware(['auth', 'verified'])->name('clientes');
+Route::get('/clientes/{id}',[ClienteController::class, 'show'])->middleware(['auth', 'verified'])->name('clientes.show');
 Route::post('/clientes',[ClienteController::class, 'store'])->middleware(['auth', 'verified'])->name('clientes.add');
 Route::delete('/clientes/{id}',[ClienteController::class, 'destroy'])->middleware(['auth', 'verified'])->name('clientes.delete');
 Route::put('/clientes/{id}',[ClienteController::class, 'update'])->middleware(['auth', 'verified'])->name('clientes.update');
@@ -52,5 +54,9 @@ Route::get('/negocios/{id}/material', [NegocioMaterialController::class, 'show']
 Route::post('/negocios/{id}/material', [NegocioMaterialController::class, 'store'])->middleware(['auth', 'verified'])->name('negocios.material.add');
 Route::delete('/negocios/material/{id}', [NegocioMaterialController::class, 'destroy'])->middleware(['auth', 'verified'])->name('negocios.material.delete');
 Route::put('/negocios/material/{id}', [NegocioMaterialController::class, 'update'])->middleware(['auth', 'verified'])->name('negocios.material.update');
+
+Route::post('/clientes/metadato',[MetadatosClienteController::class, 'store'])->middleware(['auth', 'verified'])->name('clientes.metadato.add');
+Route::put('/clientes/{id}/metadato',[MetadatosClienteController::class, 'update'])->middleware(['auth', 'verified'])->name('clientes.metadato.update');
+Route::delete('/clientes/{id}/metadato', [MetadatosClienteController::class, 'destroy'])->middleware(['auth', 'verified'])->name('clientes.metadato.delete');
 
 require __DIR__.'/auth.php';

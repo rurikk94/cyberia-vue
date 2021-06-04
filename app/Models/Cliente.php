@@ -23,4 +23,8 @@ class Cliente extends Model
     {
         return $this->belongsTo(User::class, 'electricista_id');
     }
+    public function metadatos()
+    {
+        return $this->hasMany(MetadatosCliente::class);
+    }
 }

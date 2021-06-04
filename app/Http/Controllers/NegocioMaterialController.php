@@ -159,7 +159,7 @@ class NegocioMaterialController extends Controller
         //$negocios = Negocio::where('electricista_id', $user->id)->get();
         NegocioMaterial::destroy($id);
         return response()->json([
-            'negocio' => $id
+            'material' => $id
         ], 200);
     }
 }
