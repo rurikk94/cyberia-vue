@@ -161,23 +161,16 @@
             this.c_negocio = this.negocio
             this.c_materiales = this.materiales
             this.c_materiales_negocio = this.materiales_negocio
-
-            console.log(this.c_negocio)
-            console.log(this.c_materiales)
-            console.log(this.c_materiales_negocio)
         },
         methods: {
             add() {
-                //axios.post(this.route('negocios.add'),this.form)
                 axios.post(this.route('negocios.material.add',this.c_negocio.id),{
                     'material': parseInt(this.form.material),
                     'precio': parseInt(this.form.precio)
                     })
                 .then(res => {
                     var material = res.data.material;
-                    //var material = this.form.material
-                    //material.id = agregado.id
-                    //this.c_materiales_negocio = this.c_materiales_negocio.concat(material);
+
                     this.c_materiales_negocio = material;
                     this.form.reset('material', 'precio');
                     this.$moshaToast('Agregado correctamente',{position: 'bottom-right',type: 'success', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
@@ -229,7 +222,6 @@
                 axios.put(this.route('negocios.material.update',idItem),this.formEdit)
                 .then(() => {
 
-                    //this.c_materiales.find(n => n.id === idItem).material = this.formEdit.material
                     this.c_materiales_negocio.find(n => n.id === idItem).precio = this.formEdit.precio
 
                     this.$moshaToast('Editado correctamente',{position: 'bottom-right',type: 'success', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})

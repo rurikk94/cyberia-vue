@@ -39,6 +39,16 @@
                                     Mis datos
                                 </breeze-nav-link>
                             </div>
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <breeze-nav-link :href="route('agenda')" :active="route().current('agenda')">
+                                    Mi Agenda
+                                </breeze-nav-link>
+                            </div>
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <breeze-nav-link :href="route('trabajos')" :active="route().current('trabajos')">
+                                    Trabajos
+                                </breeze-nav-link>
+                            </div>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">

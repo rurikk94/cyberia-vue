@@ -57,8 +57,15 @@ class User extends Authenticatable
     {
         return $this->hasMany(Negocio::class);
     }
+
     public function metadato()
     {
         return $this->hasMany(MetadatosUsuario::class);
     }
+
+    public function trabajos()
+    {
+        return $this->hasMany(Trabajo::class);
+    }
+
 }

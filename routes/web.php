@@ -4,6 +4,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NegocioController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\TrabajoController;
+use App\Http\Controllers\AgendamientoController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\NegocioMaterialController;
 use App\Http\Controllers\MetadatosClienteController;
@@ -64,5 +66,10 @@ Route::get('/profile',[MetadatosUsuarioController::class, 'index'])->middleware(
 Route::post('/profile/metadato',[MetadatosUsuarioController::class, 'store'])->middleware(['auth', 'verified'])->name('profile.metadato.add');
 Route::put('/profile/{id}/metadato',[MetadatosUsuarioController::class, 'update'])->middleware(['auth', 'verified'])->name('profile.metadato.update');
 Route::delete('/profile/{id}/metadato', [MetadatosUsuarioController::class, 'destroy'])->middleware(['auth', 'verified'])->name('profile.metadato.delete');
+
+Route::get('/trabajos',[TrabajoController::class, 'index'])->middleware(['auth', 'verified'])->name('trabajos');
+Route::get('/trabajo/{id}',[TrabajoController::class, 'show'])->middleware(['auth', 'verified'])->name('trabajos.show');
+
+Route::get('/agenda',[AgendamientoController::class, 'index'])->middleware(['auth', 'verified'])->name('agenda');
 
 require __DIR__.'/auth.php';

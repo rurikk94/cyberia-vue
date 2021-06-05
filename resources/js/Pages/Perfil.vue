@@ -212,7 +212,6 @@
         },
 
         mounted() {
-            console.log(this.electricista)
             this.c_electricista = this.electricista
             this.form.electricista_id = this.c_electricista.id
         },

@@ -22,8 +22,6 @@ class MetadatosUsuarioController extends Controller
         $electricista = User::where('id', $user->id)
             ->with('metadato')->first();
 
-        $metadatos = MetadatosUsuario::where('user_id', $user->id)->get();
-
         return Inertia::render('Perfil',[
             'electricista' => $electricista
         ]);

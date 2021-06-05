@@ -27,6 +27,8 @@
     },
     "dependencies": {
         "bootstrap": "^5.0.1",
+        "moment": "^2.29.1",
+        "moment-timezone": "^0.5.33",
         "mosha-vue-toastify": "^1.0.11",
         "vue-sweetalert2": "^4.3.1"
     }
