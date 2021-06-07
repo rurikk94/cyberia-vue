@@ -40,4 +40,9 @@ class Trabajo extends Model
     {
         return $this->hasMany(Agendamiento::class);
     }
+
+    public function documentos()
+    {
+        return $this->hasMany(Documento::class);
+    }
 }

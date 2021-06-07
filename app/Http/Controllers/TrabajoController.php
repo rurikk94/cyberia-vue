@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Trabajo;
+use App\Models\Agendamiento;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -59,12 +61,20 @@ class TrabajoController extends Controller
     {
         $user = Auth::user();
         $trabajo = Trabajo::where('id',$id)
-            ->with('cliente')->with('cliente.metadatos')
-            ->with('agendamientos')
+            ->with('cliente')->with('cliente.metadatos')->with('documentos')
             ->get();
 
+        $agendamientos = Agendamiento::where('trabajo_id',$id)
+            ->orderBy('fecha_hora_inicio')
+            ->get();
+
+        $trabajo = $trabajo->toArray()[0];
+        $trabajo["potencia"] = json_decode($trabajo["potencia"]);
+
+
         return Inertia::render('Trabajo',[
-            'trabajo' => $trabajo->toArray()[0]
+            'trabajo' => $trabajo,
+            'agendamientos' => $agendamientos,
         ]);
     }
 

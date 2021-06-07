@@ -45,6 +45,11 @@
                                 </breeze-nav-link>
                             </div>
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <breeze-nav-link :href="route('calendario')" :active="route().current('calendario')">
+                                    Calendario
+                                </breeze-nav-link>
+                            </div>
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <breeze-nav-link :href="route('trabajos')" :active="route().current('trabajos')">
                                     Trabajos
                                 </breeze-nav-link>

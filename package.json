@@ -26,10 +26,15 @@
         "vue-loader": "^16.1.2"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-free": "^5.15.3",
+        "@fortawesome/fontawesome-svg-core": "^1.2.35",
+        "@fortawesome/free-solid-svg-icons": "^5.15.3",
+        "@fortawesome/vue-fontawesome": "^3.0.0-4",
         "bootstrap": "^5.0.1",
         "moment": "^2.29.1",
         "moment-timezone": "^0.5.33",
         "mosha-vue-toastify": "^1.0.11",
+        "v-calendar": "^3.0.0-alpha.4",
         "vue-sweetalert2": "^4.3.1"
     }
 }
