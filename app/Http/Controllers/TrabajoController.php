@@ -102,6 +102,57 @@ class TrabajoController extends Controller
     }
 
     /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update_descripcion(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'descripcion' => 'required|string',
+        ]);
+        $user = Auth::user();
+
+        $trabajo = Trabajo::find($id);
+
+        $trabajo->descripcion = $request->descripcion;
+
+        $trabajo->save();
+        $data = $trabajo->refresh()->toArray();
+        return response()->json([
+            'trabajo' => $data
+        ], 200);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update_ubicacion(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'ubicacion' => 'required|string',
+        ]);
+        $user = Auth::user();
+
+        $trabajo = Trabajo::find($id);
+
+        $trabajo->ubicacion = $request->ubicacion;
+
+        $trabajo->save();
+        $data = $trabajo->refresh()->toArray();
+        return response()->json([
+            'trabajo' => $data
+        ], 200);
+    }
+
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Trabajo  $trabajo

@@ -23,20 +23,15 @@
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                                 <div class="p-6 bg-white border-b border-gray-200">
-                                    <h1>Mis Agenda</h1>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="py-2">
-                        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                                <div class="p-6 bg-white border-b border-gray-200">
                                     <div class="row">
-                                        <h1>Trabajos</h1>
+                                        <div class="col-3">
+                                            <h1>Mis trabajos</h1>
+                                        </div>
+                                        <div class="col-3">
+                                            <input type="text" v-model="search" placeholder="Busca un trabajo">
+                                        </div>
                                     </div>
-                                    <div class="row" v-for="dato in c_trabajos" v-bind:key="dato.id">
+                                    <div class="row" v-for="dato in filteredItems" v-bind:key="dato.id">
                                         <div class="col py-1 m-auto">
                                             {{dato.nombre_trabajo}}
                                         </div>
@@ -84,15 +79,20 @@
         data() {
             return {
                 c_trabajos: [],
+                search:''
             }
         },
 
         mounted() {
             this.c_trabajos = this.trabajos
-            console.log(this.trabajos)
         },
 
         computed: {
+            filteredItems() {
+            return this.c_trabajos.filter(item => {
+                return item.nombre_trabajo.toLowerCase().indexOf(this.search.toLowerCase()) > -1
+            })
+            }
         },
 
         methods: {

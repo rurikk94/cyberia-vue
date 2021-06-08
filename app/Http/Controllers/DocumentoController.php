@@ -64,7 +64,6 @@ class DocumentoController extends Controller
         return response()->json([
             'documento' => $data
         ], 200);
-        $a=0;
     }
 
     /**
@@ -109,10 +108,17 @@ class DocumentoController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Documento  $documento
+     * @param  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Documento $documento)
+    public function destroy(Documento $documento, $id)
     {
         //
+        $user = Auth::user();
+
+        Documento::destroy($id);
+        return response()->json([
+            'documento' => $id
+        ], 200);
     }
 }
