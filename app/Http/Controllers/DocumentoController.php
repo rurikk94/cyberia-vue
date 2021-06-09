@@ -82,6 +82,28 @@ class DocumentoController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show_cliente($id,$codigo_trabajo)
+    {
+        //$user = Auth::user();
+        $trabajo = Trabajo::where('codigo_trabajo',$codigo_trabajo)
+        ->with('cliente')->with('cliente.metadatos')->with('documentos')
+        ->with('electricista')->with('electricista.metadato')
+        ->first();
+
+        if($trabajo)
+        {
+            $documento = Documento::find($id);
+            return Storage::download($documento->nombre_archivo, $documento->nombre_original);
+        }
+
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Documento  $documento

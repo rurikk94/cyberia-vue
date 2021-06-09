@@ -23,7 +23,14 @@
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                                 <div class="p-6 bg-white border-b border-gray-200">
-                    <h1>Clientes ({{ current_clientes.length }})</h1>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <h1>Clientes ({{ current_clientes.length }})</h1>
+                                        </div>
+                                        <div class="col-3">
+                                            <input type="text" v-model="search" placeholder="Busca un cliente">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -91,7 +98,7 @@
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                                 <div class="p-6 bg-white border-b border-gray-200">
-                                    <div class="row" v-for="cliente in current_clientes" v-bind:key="cliente.id">
+                                    <div class="row" v-for="cliente in filteredItems" v-bind:key="cliente.id">
                                         <div class="col py-1 m-auto">{{cliente.nombres}}
                                         </div>
                                         <div class="col py-1 m-auto">{{cliente.apellidos}}
@@ -134,7 +141,7 @@
 
         data() {
             return {
-                current_clientes: Object,
+                current_clientes: [],
                 form: this.$inertia.form({
                     nombres: '',
                     apellidos: '',
@@ -145,11 +152,20 @@
                     apellidos: '',
                 }),
                 editando: false,
+                search:''
             }
         },
 
         mounted() {
             this.current_clientes = this.clientes
+        },
+
+        computed: {
+            filteredItems() {
+            return this.current_clientes.filter(item => {
+                return (item.nombres.toLowerCase().indexOf(this.search.toLowerCase()) > -1 || item.apellidos.toLowerCase().indexOf(this.search.toLowerCase()) > -1)
+            })
+            }
         },
 
         methods: {

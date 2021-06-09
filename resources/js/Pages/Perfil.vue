@@ -23,7 +23,35 @@
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                                 <div class="p-6 bg-white border-b border-gray-200">
-                                    <h1>Mis datos {{c_electricista.name}}</h1>
+                                    <h1>Mis datos</h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="py-2">
+                        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                                <div class="p-6 bg-white border-b border-gray-200">
+                                    <div class="row g-2">
+                                        <div class="col-2">
+                                        <p>Mi nombre</p>
+                                        </div>
+                                        <div class="col-8" v-if="!editandoNombre">
+                                            <h3>{{c_electricista.name}}</h3>
+                                        </div>
+                                        <div class="col-8" v-if="editandoNombre">
+                                            <div class="form-floating">
+                                                <textarea v-model="formEdit.nombre" class="form-control" placeholder="Juan Perez" style="height: 100px"></textarea>
+                                                <label for="floatingTextarea">Mi nombre</label>
+                                            </div>
+                                            <button type="button" class="btn btn-primary btn-sm" v-on:click="guardarNombre()">Guardar</button>
+                                            <button type="button" class="btn btn-light btn-sm" v-on:click="cancelarNombre()">Cancelar</button>
+                                        </div>
+                                        <div class="col-2">
+                                        <p><button v-if="!editandoNombre" v-on:click="editarNombre()"><i class="fas fa-edit"></i> Editar</button></p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -99,12 +127,14 @@
                                         <h1>Teléfonos</h1>
                                     </div>
                                     <div class="row" v-for="dato in telefonos" v-bind:key="dato.id">
-                                        <div class="col py-1 m-auto">
+                                        <div class="col-6 py-1 m-auto">
                                             {{dato.value}}
-                                            <a :href="'tel:'+dato.value" target="_blank">Llamar</a>
-                                            <a :href="'https://wa.me/'+dato.value" target="_blank">Whatsapp</a>
                                         </div>
-                                        <div class="col py-1 m-auto">
+                                        <div class="col-2 d-flex justify-content-around">
+                                            <a :href="'tel:'+dato.value" target="_blank" class="text-dark" title="Llamar"><i class="fas fa-phone-alt fa-2x"></i></a>
+                                            <a :href="'https://wa.me/'+dato.value" target="_blank" class="text-dark" title="Enviar mensaje por whatsapp"><i class="fab fa-whatsapp fa-2x"></i></a>
+                                        </div>
+                                        <div class="col-4 py-1 m-auto">
                                             <button type="button" class="btn btn-primary btn-lg" v-on:click="showEdit(dato)">Editar</button>
                                             <button type="button" class="btn btn-danger btn-lg" v-on:click="deleteItem(dato.id)">Eliminar</button>
                                         </div>
@@ -122,12 +152,14 @@
                                         <h1>Direcciones</h1>
                                     </div>
                                     <div class="row" v-for="dato in direcciones" v-bind:key="dato.id">
-                                        <div class="col py-1 m-auto">
+                                        <div class="col-6 py-1 m-auto">
                                             {{dato.value}}
-                                            <a :href="'https://www.google.com/maps/place/'+dato.value" target="_blank">Google Maps</a>
-                                            <a :href="'https://waze.com/ul?q='+dato.value" target="_blank">Waze</a>
                                         </div>
-                                        <div class="col py-1 m-auto">
+                                        <div class="col-2 d-flex justify-content-around">
+                                            <a :href="'https://www.google.com/maps/place/'+dato.value" target="_blank" class="text-dark"><i class="fas fa-map-marked-alt  fa-2x" alt="Google Maps"></i></a>
+                                            <a :href="'https://waze.com/ul?q='+dato.value" target="_blank" class="text-dark"><i class="fab fa-waze fa-2x" alt="Waze"></i></a>
+                                        </div>
+                                        <div class="col-4 py-1 m-auto">
                                             <button type="button" class="btn btn-primary btn-lg" v-on:click="showEdit(dato)">Editar</button>
                                             <button type="button" class="btn btn-danger btn-lg" v-on:click="deleteItem(dato.id)">Eliminar</button>
                                         </div>
@@ -145,7 +177,7 @@
                                         <h1>Emails</h1>
                                     </div>
                                     <div class="row" v-for="dato in emails" v-bind:key="dato.id">
-                                        <div class="col py-1 m-auto">
+                                        <div class="col-8 py-1 m-auto">
                                             <a :href="'mailto:'+dato.value" target="_blank">
                                             {{dato.value}}
                                             </a>
@@ -208,6 +240,10 @@
                     value: '',
                 }),
                 editando: false,
+                editandoNombre: false,
+                formEdit: this.$inertia.form({
+                    nombre:'',
+                }),
             }
         },
 
@@ -235,6 +271,24 @@
         },
 
         methods: {
+            cancelarNombre(){
+                this.editandoNombre = false
+            },
+            guardarNombre(){
+                axios.put(this.route('profile.nombre.update', this.c_electricista.id),this.formEdit)
+                .then(res => {
+                    this.c_electricista.name = this.formEdit.nombre
+                    this.$moshaToast('Editado correctamente',{position: 'bottom-right',type: 'success', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
+                })
+                .catch((e) => {
+                    this.$moshaToast('Hubo un error',{position: 'bottom-right',type: 'danger', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
+                })
+                this.editandoNombre = false
+            },
+            editarNombre(){
+                this.editandoNombre = true
+                this.formEdit.nombre = this.c_electricista.name
+            },
             add() {
                 axios.post(this.route('profile.metadato.add'),this.form)
                 .then(res => {

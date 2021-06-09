@@ -27,11 +27,20 @@
                                     <div class="row">
                                         <div class="col-8">
                                             <div class="row">
-                                                <div class="col-4">
-                                                    <h3>Trabajo</h3>
+                                                <div class="col-4 d-flex">
+                                                    <div class="h3">Trabajo</div>
+                                                    <div class="h3 ml-auto" v-if="!editandoNombre"><small><button v-on:click="editarNombre()"><i class="fas fa-edit"></i></button></small></div>
                                                 </div>
-                                                <div v-if="c_agendamientos.length > 0" class="col-8">
-                                                    <h3>Fecha Inicio {{ toMoment(c_agendamientos[0].fecha_hora_inicio,'LLL') }}</h3>
+                                                <div class="col-8" v-if="!editandoNombre">
+                                                    <h3>{{ c_trabajo.nombre_trabajo }}</h3>
+                                                </div>
+                                                <div class="col-8" v-if="editandoNombre">
+                                                    <div class="form-floating">
+                                                        <textarea v-model="formEdit.nombre_trabajo" class="form-control" placeholder="Trabajo en ... / Plano de ..." style="height: 100px"></textarea>
+                                                        <label for="floatingTextarea">Nombre del Trabajo</label>
+                                                    </div>
+                                                    <button type="button" class="btn btn-primary btn-sm" v-on:click="guardarNombre()">Guardar</button>
+                                                    <button type="button" class="btn btn-light btn-sm" v-on:click="cancelarNombre()">Cancelar</button>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -39,12 +48,15 @@
                                                     <h3>Cliente</h3>
                                                 </div>
                                                 <div class="col-8">
-                                                    <h3>{{c_trabajo.cliente.nombres}} {{c_trabajo.cliente.apellidos}}</h3>
+                                                    <inertia-link class="h3 btn btn-link btn-lg" :href="route('clientes.show',c_trabajo.cliente.id)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver Cliente">
+                                                        {{c_trabajo.cliente.nombres}} {{c_trabajo.cliente.apellidos}}
+                                                    </inertia-link>
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-4">
-                                                    <h3>Ubicación <small><button v-if="!editandoUbicacion" v-on:click="editarUbicacion()"><i class="fas fa-edit"></i></button></small></h3>
+                                                <div class="col-4 d-flex">
+                                                    <div class="h3">Ubicación</div>
+                                                    <div class="h3 ml-auto" v-if="!editandoUbicacion"><small><button v-on:click="editarUbicacion()"><i class="fas fa-edit"></i></button></small></div>
                                                 </div>
                                                 <div class="col-6">
                                                     <h4 v-if="!editandoUbicacion"> {{c_trabajo.ubicacion}} </h4>
@@ -61,8 +73,9 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-12">
-                                                    <h3>Descripción <small><button v-if="!editandoDescripcion" v-on:click="editarDescripcion()"><i class="fas fa-edit"></i></button></small></h3>
+                                                <div class="col-4 d-flex">
+                                                    <div class="h3">Descripción</div>
+                                                    <div class="h3 ml-auto" v-if="!editandoDescripcion"><small><button v-on:click="editarDescripcion()"><i class="fas fa-edit"></i></button></small></div>
                                                 </div>
                                                 <div class="col-12">
                                                     <p v-if="!editandoDescripcion">{{c_trabajo.descripcion}}</p>
@@ -183,7 +196,11 @@
                                         <div class="col-4">
                                             <div class="row">
                                                 <div class="col-12">
-                                                    <h3>Cliente Info</h3>
+                                                    <h3>Cliente Info
+                                                        <inertia-link class="btn btn-link btn-sm" :href="route('clientes.show',c_trabajo.cliente.id)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver Cliente">
+                                                            <i class="fas fa-external-link-alt"></i>
+                                                        </inertia-link>
+                                                    </h3>
                                                 </div>
                                                 <div class="col-12">
                                                     <div class="row" v-for="dato in c_trabajo.cliente.metadatos" v-bind:key="dato.id">
@@ -255,6 +272,7 @@
             return {
                 c_trabajo: {
                     cliente: {
+                        id:'',
                         nombres:'',
                         apellidos: ''
                     },
@@ -294,9 +312,11 @@
                 file: '',
                 editandoDescripcion: false,
                 editandoUbicacion: false,
+                editandoNombre: false,
                 formEdit: this.$inertia.form({
                     ubicacion:'',
-                    descripcion:''
+                    descripcion:'',
+                    nombre_trabajo:''
                 }),
                 list_view: false,
                 ancho_card_archivo:'col-3 mb-1'
@@ -312,6 +332,24 @@
         },
 
         methods: {
+            cancelarNombre(){
+                this.editandoNombre = false
+            },
+            guardarNombre(){
+                axios.put(this.route('trabajo.nombre.update', this.c_trabajo.id),this.formEdit)
+                .then(res => {
+                    this.c_trabajo.nombre_trabajo = this.formEdit.nombre_trabajo
+                    this.$moshaToast('Editado correctamente',{position: 'bottom-right',type: 'success', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
+                })
+                .catch((e) => {
+                    this.$moshaToast('Hubo un error',{position: 'bottom-right',type: 'danger', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
+                })
+                this.editandoNombre = false
+            },
+            editarNombre(){
+                this.editandoNombre = true
+                this.formEdit.nombre_trabajo = this.c_trabajo.nombre_trabajo
+            },
             deleteDocumento(idItem) {
 
                 this.$swal({

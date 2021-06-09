@@ -79,6 +79,63 @@ class TrabajoController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show_estado()
+    {
+        /* $user = Auth::user();
+        $trabajo = Trabajo::where('id',$id)
+            ->with('cliente')->with('cliente.metadatos')->with('documentos')
+            ->get();
+
+        $agendamientos = Agendamiento::where('trabajo_id',$id)
+            ->orderBy('fecha_hora_inicio')
+            ->get();
+
+        $trabajo = $trabajo->toArray()[0];
+        $trabajo["potencia"] = json_decode($trabajo["potencia"]); */
+
+
+        return Inertia::render('EstadoTrabajo',[
+            /* 'trabajo' => $trabajo,
+            'agendamientos' => $agendamientos, */
+        ]);
+    }
+    /**
+     * Display the specified resource.
+     *
+     * @param  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function get_estado(Request $request)
+    {
+        $validated = $request->validate([
+            'codigo_trabajo' => 'required|string',
+        ]);
+
+        //$user = Auth::user();
+        $trabajo = Trabajo::where('codigo_trabajo',$request->codigo_trabajo)
+            ->with('cliente')->with('cliente.metadatos')->with('documentos')
+            ->with('electricista')->with('electricista.metadato')
+            ->first();
+
+        $agendamientos = Agendamiento::where('trabajo_id',$trabajo->id)
+            ->orderBy('fecha_hora_inicio')
+            ->get();
+
+        $trabajo = $trabajo->toArray();
+        $trabajo["potencia"] = json_decode($trabajo["potencia"]);
+
+        return response()->json([
+            'trabajo' => $trabajo,
+            'agendamientos' => $agendamientos,
+        ], 200);
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Trabajo  $trabajo
@@ -118,6 +175,31 @@ class TrabajoController extends Controller
         $trabajo = Trabajo::find($id);
 
         $trabajo->descripcion = $request->descripcion;
+
+        $trabajo->save();
+        $data = $trabajo->refresh()->toArray();
+        return response()->json([
+            'trabajo' => $data
+        ], 200);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update_nombre(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'nombre_trabajo' => 'required|string',
+        ]);
+        $user = Auth::user();
+
+        $trabajo = Trabajo::find($id);
+
+        $trabajo->nombre_trabajo = $request->nombre_trabajo;
 
         $trabajo->save();
         $data = $trabajo->refresh()->toArray();

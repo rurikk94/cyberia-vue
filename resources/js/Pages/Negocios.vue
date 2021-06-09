@@ -23,7 +23,14 @@
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                                 <div class="p-6 bg-white border-b border-gray-200">
-                                    <h1>Negocios ({{ current_negocios.length }})</h1>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <h1>Negocios ({{ current_negocios.length }})</h1>
+                                        </div>
+                                        <div class="col-3">
+                                            <input type="text" v-model="search" placeholder="Busca un negocio">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -93,7 +100,7 @@
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                                 <div class="p-6 bg-white border-b border-gray-200">
-                                    <div class="row" v-for="negocio in current_negocios" v-bind:key="negocio.id">
+                                    <div class="row" v-for="negocio in filteredItems" v-bind:key="negocio.id">
                                         <div class="col py-1 m-auto">{{negocio.nombre}}
                                         </div>
                                         <div class="col py-1 m-auto">{{negocio.ubicacion}}
@@ -139,7 +146,7 @@
 
         data() {
             return {
-                current_negocios: Object,
+                current_negocios:  [],
                 form: this.$inertia.form({
                     nombre: '',
                     ubicacion: '',
@@ -150,6 +157,7 @@
                     ubicacion: '',
                 }),
                 editando: false,
+                search:''
             }
         },
 
@@ -160,6 +168,14 @@
             var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl)
             })
+        },
+
+        computed: {
+            filteredItems() {
+            return this.current_negocios.filter(item => {
+                return item.nombre.toLowerCase().indexOf(this.search.toLowerCase()) > -1
+            })
+            }
         },
 
         methods: {

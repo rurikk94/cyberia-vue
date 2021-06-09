@@ -23,7 +23,14 @@
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                                 <div class="p-6 bg-white border-b border-gray-200">
-                                    <h1>Materiales ({{ current_materiales.length }})</h1>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <h1>Materiales ({{ current_materiales.length }})</h1>
+                                        </div>
+                                        <div class="col-3">
+                                            <input type="text" v-model="search" placeholder="Busca un material">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -104,7 +111,7 @@
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                                 <div class="p-6 bg-white border-b border-gray-200">
-                                    <div class="row" v-for="material in current_materiales" v-bind:key="material.id">
+                                    <div class="row" v-for="material in filteredItems" v-bind:key="material.id">
                                         <div class="col py-1 m-auto">{{material.nombre}}
                                         </div>
                                         <div class="col py-1 m-auto">{{material.marca}}
@@ -146,7 +153,7 @@
 
         data() {
             return {
-                current_materiales: Object,
+                current_materiales:  [],
                 form: this.$inertia.form({
                     nombre: '',
                     marca: '',
@@ -159,11 +166,20 @@
                     modelo: '',
                 }),
                 editando: false,
+                search:''
             }
         },
 
         mounted() {
             this.current_materiales = this.materiales
+        },
+
+        computed: {
+            filteredItems() {
+            return this.current_materiales.filter(item => {
+                return item.nombre.toLowerCase().indexOf(this.search.toLowerCase()) > -1
+            })
+            }
         },
 
         methods: {

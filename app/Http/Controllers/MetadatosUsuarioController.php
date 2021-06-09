@@ -113,6 +113,31 @@ class MetadatosUsuarioController extends Controller
             'metadato' => $data
         ], 200);
     }
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\MetadatosUsuario  $metadatosUsuario
+     * @return \Illuminate\Http\Response
+     */
+    public function update_nombre(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'nombre' => 'required|string|max:100',
+        ]);
+
+        $user = Auth::user();
+        $electricista = User::find($user->id);
+
+        $electricista->name = $request->nombre;
+
+        $electricista->save();
+
+        $data = $electricista->refresh()->toArray();
+        return response()->json([
+            'electricista' => $data
+        ], 200);
+    }
 
     /**
      * Remove the specified resource from storage.

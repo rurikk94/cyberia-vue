@@ -77,7 +77,9 @@ class ClienteController extends Controller
         //
         $user = Auth::user();
         $cliente = Cliente::where('id', $id)
-            ->with('metadatos')->first();
+            ->with('metadatos')
+            ->with('trabajos')
+            ->first();
 
         if( !$cliente || $cliente->electricista_id != $user->id)
         return response()->json([

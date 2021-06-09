@@ -66,17 +66,23 @@ Route::delete('/clientes/{id}/metadato', [MetadatosClienteController::class, 'de
 Route::get('/profile',[MetadatosUsuarioController::class, 'index'])->middleware(['auth', 'verified'])->name('profile');
 Route::post('/profile/metadato',[MetadatosUsuarioController::class, 'store'])->middleware(['auth', 'verified'])->name('profile.metadato.add');
 Route::put('/profile/{id}/metadato',[MetadatosUsuarioController::class, 'update'])->middleware(['auth', 'verified'])->name('profile.metadato.update');
+Route::put('/profile/{id}/nombre',[MetadatosUsuarioController::class, 'update_nombre'])->middleware(['auth', 'verified'])->name('profile.nombre.update');
 Route::delete('/profile/{id}/metadato', [MetadatosUsuarioController::class, 'destroy'])->middleware(['auth', 'verified'])->name('profile.metadato.delete');
 
 Route::get('/trabajos',[TrabajoController::class, 'index'])->middleware(['auth', 'verified'])->name('trabajos');
 Route::get('/trabajo/{id}',[TrabajoController::class, 'show'])->middleware(['auth', 'verified'])->name('trabajos.show');
+Route::put('/trabajo/{id}/nombre',[TrabajoController::class, 'update_nombre'])->middleware(['auth', 'verified'])->name('trabajo.nombre.update');
 Route::put('/trabajo/{id}/descripcion',[TrabajoController::class, 'update_descripcion'])->middleware(['auth', 'verified'])->name('trabajo.descripcion.update');
 Route::put('/trabajo/{id}/ubicacion',[TrabajoController::class, 'update_ubicacion'])->middleware(['auth', 'verified'])->name('trabajo.ubicacion.update');
 Route::get('/trabajo/documento/{id}',[DocumentoController::class, 'show'])->middleware(['auth', 'verified'])->name('trabajo.documento.show');
+Route::get('/trabajo/documento/{id}/{codigo_trabajo}',[DocumentoController::class, 'show_cliente'])->middleware(['guest'])->name('trabajo.cliente.documento.show');
 Route::post('/trabajo/{id}/documento',[DocumentoController::class, 'store'])->middleware(['auth', 'verified'])->name('trabajo.documento.add');
 Route::delete('/trabajo/{id}/documento',[DocumentoController::class, 'destroy'])->middleware(['auth', 'verified'])->name('trabajo.documento.delete');
 
 Route::get('/agenda',[AgendamientoController::class, 'index'])->middleware(['auth', 'verified'])->name('agenda');
 Route::get('/calendario',[AgendamientoController::class, 'calendario'])->middleware(['auth', 'verified'])->name('calendario');
+
+Route::get('/trabajo',[TrabajoController::class, 'show_estado'])->middleware(['guest'])->name('trabajo.estado.show');
+Route::post('/trabajo/estado',[TrabajoController::class, 'get_estado'])->middleware(['guest'])->name('trabajos.estado.get');
 
 require __DIR__.'/auth.php';
