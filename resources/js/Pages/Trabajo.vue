@@ -202,7 +202,7 @@
                                                         </inertia-link>
                                                     </h3>
                                                 </div>
-                                                <div class="col-12">
+                                                <div class="col-12 shadow p-3 mb-2 bg-body rounded">
                                                     <div class="row" v-for="dato in c_trabajo.cliente.metadatos" v-bind:key="dato.id">
                                                         <div class="col-2" v-if="dato.key == 'telefono'"><i class="fas fa-phone-alt  fa-2x"></i> </div>
                                                         <div class="col-2" v-if="dato.key == 'email'"><i class="fas fa-envelope fa-2x"></i></div>
@@ -216,13 +216,32 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-12">
+                                                <div class="col-12 d-flex">
                                                     <h3>Agendamientos</h3>
+                                                    <div class="h3 ml-auto" v-if="!agendando"><small><button v-on:click="agendar()"><i class="fas fa-plus"></i> Agendar</button></small></div>
+                                                </div>
+                                                <div v-if="agendando" class="col-12 fs-6">
+                                                    <div class="shadow p-3 mb-2 bg-body rounded">
+                                                        <p>Al agendar se enviará un email al cliente indicando su agendamiento.</p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <label for="desde">Desde las</label>
+                                                            <input type="datetime-local" id="desde" v-model="agendamiento.fecha_hora_inicio">
+                                                        </div>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                                <label for="hasta">Hasta el</label>
+                                                                <input type="datetime-local" id="hasta" v-model="agendamiento.fecha_hora_fin">
+                                                        </div>
+                                                        <div class="d-flex justify-content-around">
+                                                            <button type="button" class="btn btn-primary btn-sm" v-on:click="agendando = false">Cancelar</button>
+                                                            <button type="button" class="btn btn-primary btn-sm" v-on:click="guardarAgendamiento()">Agendar</button>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div v-if="c_agendamientos.length > 0" class="col-12 fs-6">
                                                     <div v-for="agenda in c_agendamientos" v-bind:key="agenda.id" class="row">
                                                         <div class="shadow p-3 mb-2 bg-body rounded">
                                                             {{ toMoment(agenda.fecha_hora_inicio,'LLL') }} hasta el {{ toMoment(agenda.fecha_hora_fin,'LLL') }}
+                                                            <small><button v-on:click="deleteAgendamiento(agenda.id)"  data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Eliminar documento'"><i class="fas fa-trash-alt"></i></button></small>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -313,10 +332,16 @@
                 editandoDescripcion: false,
                 editandoUbicacion: false,
                 editandoNombre: false,
+                agendando: false,
                 formEdit: this.$inertia.form({
                     ubicacion:'',
                     descripcion:'',
                     nombre_trabajo:''
+                }),
+                agendamiento: this.$inertia.form({
+                    trabajo_id: this.trabajo.id,
+                    fecha_hora_inicio:'',
+                    fecha_hora_fin:''
                 }),
                 list_view: false,
                 ancho_card_archivo:'col-3 mb-1'
@@ -332,6 +357,61 @@
         },
 
         methods: {
+            deleteAgendamiento(idItem) {
+
+                this.$swal({
+                title: '¿Estás seguro?',
+                text: "No puedes revertir esta eliminación",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, eliminarlo!'
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+
+                        axios.delete(this.route('agenda.delete',idItem))
+                        .then(res => {
+                            //var material = parseInt(res.data.material);
+                            this.c_agendamientos = this.c_agendamientos.filter((obj) => {
+                                return obj.id !== idItem;
+                            })
+                            this.$moshaToast('Eliminado correctamente',{position: 'bottom-right',type: 'success', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
+                        })
+                        .catch((e) => {
+                            this.$moshaToast('Hubo un error',{position: 'bottom-right',type: 'danger', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
+                        })
+
+                    }
+                })
+
+            },
+            guardarAgendamiento(){
+                this.agendando = false
+
+                this.agendamiento.fecha_hora_inicio = moment(this.agendamiento.fecha_hora_inicio).utc().format('YYYY-MM-DDTHH:mm')
+                this.agendamiento.fecha_hora_fin = moment(this.agendamiento.fecha_hora_fin).utc().format('YYYY-MM-DDTHH:mm')
+
+
+                axios.post(this.route('agenda.add'),this.agendamiento)
+                .then(res => {
+                    var evento = res.data.agendamiento;
+                    this.c_agendamientos = this.c_agendamientos.concat(evento);
+                    this.file = '';
+                    this.$moshaToast('Agregado correctamente',{position: 'bottom-right',type: 'success', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
+
+                })
+                .catch((e) => {
+                    this.$moshaToast('Hubo un error',{position: 'bottom-right',type: 'danger', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
+                })
+            },
+            agendar(){
+                this.agendando = true
+                this.agendamiento.id = this.c_trabajo.id
+                this.agendamiento.fecha_hora_inicio = moment().format('YYYY-MM-DDTHH:mm')
+                this.agendamiento.fecha_hora_fin = moment().add(1, 'hours').format('YYYY-MM-DDTHH:mm')
+            },
             cancelarNombre(){
                 this.editandoNombre = false
             },

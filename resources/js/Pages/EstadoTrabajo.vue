@@ -5,16 +5,17 @@
                 <div class="py-2">
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                            <div class="p-6 bg-white border-b border-gray-200">
+                            <div class="p-6 bg-white border-b border-gray-200 text-center">
+                                <h1>Ver estado del Trabajo</h1>
                                 <form @submit.prevent="getTrabajo">
                                 <div class="row g-2">
-                                        <div class="col-md">
+                                        <div class="col">
                                             <div class="form-floating">
                                             <input type="text" class="form-control" name="codigo_trabajo" id="codigo_trabajo" v-model="form.codigo_trabajo" required placeholder="Código del trabajo">
                                             <label for="nombres">Código del trabajo</label>
                                             </div>
                                         </div>
-                                        <div class="col-md">
+                                        <div class="col">
                                             <button type="submit" class="btn btn-success btn-lg btn-block">Ingresar</button>
                                         </div>
                                 </div>
@@ -32,7 +33,7 @@
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                             <div class="p-6 bg-white border-b border-gray-200">
-                                <div class="row">
+                                <div class="row mb-2">
                                     <button type="button" class="btn btn-primary btn-lg" v-on:click="this.get_c_trabajo = false">Salir</button>
                                 </div>
                                 <div class="row">
@@ -333,7 +334,7 @@
 
                 })
                 .catch((e) => {
-                    this.$moshaToast('Hubo un error',{position: 'bottom-right',type: 'danger', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
+                    this.$moshaToast('No existe ningún trabajo con ese código.',{position: 'bottom-right',type: 'danger', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
                 })
             },
             toggleView(){

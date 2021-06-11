@@ -25,13 +25,14 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
+    return Inertia::render('Dashboard');
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-});
+})->middleware(['auth', 'verified'])->name('dashboard.i');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -81,6 +82,8 @@ Route::delete('/trabajo/{id}/documento',[DocumentoController::class, 'destroy'])
 
 Route::get('/agenda',[AgendamientoController::class, 'index'])->middleware(['auth', 'verified'])->name('agenda');
 Route::get('/calendario',[AgendamientoController::class, 'calendario'])->middleware(['auth', 'verified'])->name('calendario');
+Route::post('/agenda',[AgendamientoController::class, 'store'])->middleware(['auth', 'verified'])->name('agenda.add');
+Route::delete('/agenda/{id}',[AgendamientoController::class, 'destroy'])->middleware(['auth', 'verified'])->name('agenda.delete');
 
 Route::get('/trabajo',[TrabajoController::class, 'show_estado'])->middleware(['guest'])->name('trabajo.estado.show');
 Route::post('/trabajo/estado',[TrabajoController::class, 'get_estado'])->middleware(['guest'])->name('trabajos.estado.get');

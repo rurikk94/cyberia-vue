@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Agendamiento;
 use App\Models\Trabajo;
+use App\Models\MetadatosCliente;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Redirect;
 use Carbon\Carbon;
+use App\Mail\AgendamientoEmail;
+use Illuminate\Support\Facades\Mail;
 
 class AgendamientoController extends Controller
 {
@@ -214,7 +217,52 @@ class AgendamientoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            //'trabajo' => 'required|integer',
+            'trabajo_id' => 'required|integer',
+            'fecha_hora_inicio' => 'required|date|after:today',
+            'fecha_hora_fin' => 'required|date|after:fecha_hora_inicio',
+        ]);
+
+        $user = Auth::user();
+
+        /* $materiales_negocio = NegocioMaterial::find($material->id)
+            ->where('electricista_id', $user->id)
+            ->where('negocio_id', $id)
+            ->with('material')->get(); */
+
+        $trabajo = Trabajo::where('id',$request->trabajo_id)->with('cliente')->with('electricista')->first();
+
+        $emails = MetadatosCliente::where('key','=','email')->where('cliente_id',$trabajo->cliente_id)->get();
+        $emails = $emails->toArray();
+
+        foreach ($emails as $e) {
+            $objDemo = new \stdClass();
+            $objDemo->url = url("/trabajo");;
+            $objDemo->codigo_trabajo = $trabajo->codigo_trabajo;
+
+            $objDemo->inicio =  Carbon::parse($request->fecha_hora_inicio); // 1975-05-21 22:00:00
+            $objDemo->inicio->setTimezone('America/Santiago')->toDateTimeString();
+            $objDemo->fin =     Carbon::parse($request->fecha_hora_fin); // 1975-05-21 22:00:00
+            $objDemo->fin->setTimezone('America/Santiago')->toDateTimeString();
+
+            $objDemo->sender = $trabajo->electricista->name;
+            $objDemo->receiver = $trabajo->cliente->nombres . ' ' . $trabajo->cliente->apellidos;
+
+            Mail::to($e["value"])->send(new AgendamientoEmail($objDemo));
+        }
+
+        $agendamiento = new Agendamiento;
+
+        $agendamiento->trabajo_id =         $request->id;
+        $agendamiento->fecha_hora_inicio =  $request->fecha_hora_inicio;
+        $agendamiento->fecha_hora_fin =     $request->fecha_hora_fin;
+
+        $agendamiento->save();
+        $agendamiento = $agendamiento->refresh()->toArray();
+        return response()->json([
+            'agendamiento' => $agendamiento
+        ], 200);
     }
 
     /**
@@ -257,8 +305,13 @@ class AgendamientoController extends Controller
      * @param  \App\Models\Agendamiento  $agendamiento
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Agendamiento $agendamiento)
+    public function destroy(Agendamiento $agendamiento, $id)
     {
-        //
+        $user = Auth::user();
+
+        Agendamiento::destroy($id);
+        return response()->json([
+            'agendamiento' => $id
+        ], 200);
     }
 }
