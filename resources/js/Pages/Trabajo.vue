@@ -207,7 +207,7 @@
                                                         </inertia-link>
                                                     </h3>
                                                 </div>
-                                                <div class="col-12 shadow p-3 mb-2 bg-body rounded">
+                                                <div class="col-12 shadow mb-2 bg-body rounded">
                                                     <div class="row" v-for="dato in c_trabajo.cliente.metadatos" v-bind:key="dato.id">
                                                         <div class="col-2" v-if="dato.key == 'telefono'"><i class="fas fa-phone-alt  fa-2x"></i> </div>
                                                         <div class="col-2" v-if="dato.key == 'email'"><i class="fas fa-envelope fa-2x"></i></div>
@@ -226,7 +226,7 @@
                                                     <div class="h3 ml-auto" v-if="!agendando"><small><button v-on:click="agendar()"><i class="fas fa-plus"></i> Agendar</button></small></div>
                                                 </div>
                                                 <div v-if="agendando" class="col-12 fs-6">
-                                                    <div class="shadow p-3 mb-2 bg-body rounded">
+                                                    <div class="shadow mb-2 bg-body rounded">
                                                         <p>Al agendar se enviará un email al cliente indicando su agendamiento.</p>
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <label for="desde">Desde las</label>
@@ -242,9 +242,9 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div v-if="c_agendamientos.length > 0" class="col-12 fs-6">
+                                                <div v-if="c_agendamientos.length > 0" class="col-12 fs-6 overflow-auto shadow mb-2" style="max-height: 300px;">
                                                     <div v-for="agenda in c_agendamientos" v-bind:key="agenda.id" class="row">
-                                                        <div class="shadow p-3 mb-2 bg-body rounded">
+                                                        <div class="shadow mb-2 bg-body rounded">
                                                             {{ toMoment(agenda.fecha_hora_inicio,'LLL') }} hasta el {{ toMoment(agenda.fecha_hora_fin,'LLL') }}
                                                             <small><button v-on:click="deleteAgendamiento(agenda.id)"  data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Eliminar documento'"><i class="fas fa-trash-alt"></i></button></small>
                                                         </div>
@@ -252,8 +252,75 @@
                                                 </div>
                                                 <div v-else class="col-12 fs-6">
                                                     <div  class="row">
-                                                        <div class="shadow p-3 mb-2 bg-body rounded">
+                                                        <div class="shadow mb-2 bg-body rounded">
                                                             No existen agendamientos
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12 d-flex">
+                                                    <h3>Materiales</h3>
+                                                    <div class="h3 ml-auto" v-if="!agregandoMaterial"><small><button v-on:click="material()"><i class="fas fa-plus"></i> Agregar</button></small></div>
+                                                </div>
+                                                <div v-if="agregandoMaterial" class="col-12 fs-6">
+                                                    <div class="shadow mb-2 bg-body rounded">
+                                                        <p>Al agregar un material, se agrega a la lista de materiales de este trabajo, y se agrega el precio menor que has cotizado.</p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <label for="desde">Desde las</label>
+                                                            <input type="datetime-local" id="desde" v-model="agendamiento.fecha_hora_inicio">
+                                                        </div>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                                <label for="hasta">Hasta el</label>
+                                                                <input type="datetime-local" id="hasta" v-model="agendamiento.fecha_hora_fin">
+                                                        </div>
+                                                        <div class="d-flex justify-content-around">
+                                                            <button type="button" class="btn btn-primary btn-sm" v-on:click="agregandoMaterial = false">Cancelar</button>
+                                                            <button type="button" class="btn btn-primary btn-sm" v-on:click="guardarMaterial()">Agregar</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div v-if="c_materiales.length > 0" class="col-12 fs-6 overflow-auto shadow">
+                                                    <div class="row border bg-body rounded">
+                                                        <div class="col-3">
+                                                        Cantidad
+                                                        </div>
+                                                        <div class="col-6">
+                                                        Material
+                                                        </div>
+                                                        <div class="col-3">
+                                                        Precio unitario
+                                                        </div>
+                                                    </div>
+                                                    <div v-for="material in c_materiales" v-bind:key="material.id" class="row border bg-body rounded">
+                                                        <div class="col-3">
+                                                            <input class="form-control form-control-sm" v-model="material.cantidad" type="number" placeholder="Cantidad" :aria-label="'Cantidad de' + material.material.nombre" min="1">
+                                                        </div>
+                                                        <div class="col-6">
+                                                        {{material.material.nombre}} {{material.material.marca}} {{material.material.modelo}}
+                                                        </div>
+                                                        <div class="col-3">
+                                                        {{'$ ' + material.negocio.precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")  }}
+                                                        <small><button v-on:click="deleteMaterial(material.id)"  data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Eliminar Material'"><i class="fas fa-trash-alt"></i></button></small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row border bg-body rounded">
+                                                        <div class="col-6 offset-3">
+                                                        Total:
+                                                        </div>
+                                                        <div class="col-3">
+                                                        {{ totalPrecio() }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div v-else class="col-12 fs-6">
+                                                    <div  class="row">
+                                                        <div class="shadow mb-2 bg-body rounded">
+                                                            No existen materiales
+                                                            <br/>
+                                                            {{ c_materiales}}
+                                                            <br/>
+                                                            {{ materiales}}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -290,6 +357,7 @@
             errors: Object,
             trabajo: Object,
             agendamientos: Object,
+            materiales: Object,
         },
 
         data() {
@@ -313,6 +381,19 @@
                         trabajo_id:Number,
                         fecha_hora_inicio:Date,
                         fecha_hora_fin:Date
+                    },
+                ],
+                c_materiales: [
+                    {
+
+                        id:Number,
+                        trabajo_id:Number,
+                        material_id:Number,
+                        negocio:{
+                            precio:String
+                            },
+                        material:Object,
+                        cantidad:Number
                     },
                 ],
                 estado_avance:[
@@ -340,6 +421,7 @@
                 editandoUbicacion: false,
                 editandoNombre: false,
                 agendando: false,
+                agregandoMaterial: false,
                 formEdit: this.$inertia.form({
                     ubicacion:'',
                     descripcion:'',
@@ -350,6 +432,11 @@
                     fecha_hora_inicio:'',
                     fecha_hora_fin:''
                 }),
+                formMaterial: this.$inertia.form({
+                    trabajo_id: this.trabajo.id,
+                    material_id:'',
+                    cantidad:''
+                }),
                 list_view: false,
                 ancho_card_archivo:'col-6 col-lg-3 mb-1'
             }
@@ -358,6 +445,7 @@
         mounted() {
             this.c_trabajo = this.trabajo
             this.c_agendamientos = this.agendamientos
+            this.c_materiales = this.materiales
         },
 
         computed: {
@@ -369,6 +457,57 @@
         },
 
         methods: {
+            material(){
+                this.agregandoMaterial = true
+                this.formMaterial.trabajo_id = this.c_trabajo.id
+                this.formMaterial.material_id = ''
+                this.formMaterial.cantidad = ''
+            },
+            guardarMaterial(){
+
+                axios.post(this.route('agenda.add'),this.agendamiento)
+                .then(res => {
+                    var material = res.data.material;
+                    this.c_materiales = this.c_materiales.concat(material);
+                    this.file = '';
+                    this.$moshaToast('Agregado correctamente',{position: 'bottom-right',type: 'success', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
+
+                })
+                .catch((e) => {
+                    this.$moshaToast('Hubo un error',{position: 'bottom-right',type: 'danger', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
+                })
+                .finally((f) => {
+                    this.agregandoMaterial = false
+                })
+            },
+            deleteMaterial(idItem) {
+
+                this.$swal({
+                title: '¿Estás seguro?',
+                text: "No puedes revertir esta eliminación",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, eliminarlo!'
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+
+                        axios.delete(this.route('agenda.delete',idItem))
+                        .then(res => {
+                            this.c_materiales = this.c_materiales.filter((obj) => {
+                                return obj.id !== idItem;
+                            })
+                            this.$moshaToast('Eliminado correctamente',{position: 'bottom-right',type: 'success', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
+                        })
+                        .catch((e) => {
+                            this.$moshaToast('Hubo un error',{position: 'bottom-right',type: 'danger', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
+                        })
+
+                    }
+                })
+            },
             deleteAgendamiento(idItem) {
 
                 this.$swal({
@@ -385,7 +524,6 @@
 
                         axios.delete(this.route('agenda.delete',idItem))
                         .then(res => {
-                            //var material = parseInt(res.data.material);
                             this.c_agendamientos = this.c_agendamientos.filter((obj) => {
                                 return obj.id !== idItem;
                             })
@@ -460,7 +598,6 @@
                             'id': idItem
                         }})
                         .then(res => {
-                            //var material = parseInt(res.data.material);
                             this.c_trabajo.documentos = this.c_trabajo.documentos.filter((obj) => {
                                 return obj.id !== idItem;
                             })
@@ -518,6 +655,15 @@
                 var stillUtc = moment.utc(time).toDate();
                 //var local = moment(stillUtc).local().format('YYYY-MM-DD HH:mm:ss');
                 return moment(stillUtc).locale('es-mx').local().format(formato);
+            },
+            totalPrecio(){
+                let sum = 0
+                for (let i = 0; i < this.c_materiales.length; i++) {
+                    const p = this.c_materiales[i] //material.negocio.precio
+                    //const p = this.c_trabajo.potencia.potencias[i];
+                    sum += parseInt(p.negocio.precio) * parseInt(p.cantidad)
+                }
+                return '$ ' + sum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
             },
             totalPotencia(){
                 let sum = 0
