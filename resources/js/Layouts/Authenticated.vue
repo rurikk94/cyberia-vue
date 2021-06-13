@@ -74,7 +74,7 @@
 
                                     <template #content>
                                         <breeze-dropdown-link :href="route('logout')" method="post" as="button">
-                                            Log Out
+                                            Salir
                                         </breeze-dropdown-link>
                                     </template>
                                 </breeze-dropdown>
@@ -115,6 +115,26 @@
                             Materiales
                         </breeze-responsive-nav-link>
                     </div>
+                    <div class="pt-2 pb-3 space-y-1">
+                        <breeze-responsive-nav-link :href="route('profile')" :active="route().current('profile')">
+                            Mis datos
+                        </breeze-responsive-nav-link>
+                    </div>
+                    <div class="pt-2 pb-3 space-y-1">
+                        <breeze-responsive-nav-link :href="route('agenda')" :active="route().current('agenda')">
+                            Mi Agenda
+                        </breeze-responsive-nav-link>
+                    </div>
+                    <div class="pt-2 pb-3 space-y-1">
+                        <breeze-responsive-nav-link :href="route('calendario')" :active="route().current('calendario')">
+                            Calendario
+                        </breeze-responsive-nav-link>
+                    </div>
+                    <div class="pt-2 pb-3 space-y-1">
+                        <breeze-responsive-nav-link :href="route('trabajos')" :active="route().current('trabajos')">
+                            Trabajos
+                        </breeze-responsive-nav-link>
+                    </div>
 
                     <!-- Responsive Settings Options -->
                     <div class="pt-4 pb-1 border-t border-gray-200">
@@ -125,7 +145,7 @@
 
                         <div class="mt-3 space-y-1">
                             <breeze-responsive-nav-link :href="route('logout')" method="post" as="button">
-                                Log Out
+                                Salir
                             </breeze-responsive-nav-link>
                         </div>
                     </div>

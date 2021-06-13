@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Trabajo;
 use App\Models\Agendamiento;
+use App\Models\Cliente;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,9 +25,11 @@ class TrabajoController extends Controller
             ->with('cliente')->with('cliente.metadatos')
             ->with('agendamientos')
             ->get();
+        $clientes = Cliente::where('electricista_id', $user->id)->get();
 
         return Inertia::render('Trabajos',[
-            'trabajos' => $trabajos
+            'trabajos' => $trabajos,
+            'clientes' => $clientes
         ]);
     }
 
@@ -48,7 +51,44 @@ class TrabajoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'nombre_trabajo' => 'required|string|max:191',
+            'ubicacion' => 'required|string|max:191',
+            'descripcion' => 'required|string|max:191',
+            'cliente_id' => 'required|integer',
+        ]);
+
+
+        $user = Auth::user();
+
+
+        $codigo = strtoupper(substr(md5(time()),0,10));
+        $codigo = 'AA3H8K52';
+        $trabajo = Trabajo::where('codigo_trabajo','=',$codigo)->first();
+        while ($trabajo) {
+            $codigo = strtoupper(substr(md5(time()),0,10));
+            $trabajo = Trabajo::where('codigo_trabajo','=',$codigo)->first();
+        }
+
+        $trabajo = new Trabajo;
+
+        $trabajo->electricista_id  = $user->id;
+        $trabajo->codigo_trabajo  = $codigo;
+        $trabajo->nombre_trabajo  = $request->nombre_trabajo;
+        $trabajo->cliente_id  = $request->cliente_id;
+        $trabajo->ubicacion  = $request->ubicacion;
+        $trabajo->descripcion  = $request->descripcion;
+        $trabajo->cotizacion_estado  = 1;
+        $trabajo->avance_estado  = 0;
+        $trabajo->potencia  = '{"potencias": [{"kwh": 2.5, "aparato": "Luces", "potencia": 500, "tiempo_uso": 5}]}';
+        $trabajo->tipo_trabajo  = 1;
+
+        $trabajo->save();
+
+        $data = $trabajo->refresh()->toArray();
+        return response()->json([
+            'trabajo' => $data
+        ], 200);
     }
 
     /**
@@ -240,8 +280,14 @@ class TrabajoController extends Controller
      * @param  \App\Models\Trabajo  $trabajo
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Trabajo $trabajo)
+    public function destroy(Request $request, $id)
     {
         //
+        $user = Auth::user();
+
+        Trabajo::destroy($id);
+        return response()->json([
+            'trabajo' => $id
+        ], 200);
     }
 }

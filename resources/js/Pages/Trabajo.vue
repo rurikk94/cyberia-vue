@@ -25,7 +25,7 @@
                             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                                 <div class="p-6 bg-white border-b border-gray-200">
                                     <div class="row">
-                                        <div class="col-8">
+                                        <div class="col-12 col-lg-8">
                                             <div class="row">
                                                 <div class="col-4 d-flex">
                                                     <div class="h3">Trabajo</div>
@@ -118,24 +118,27 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-12">
+                                                <div class="col-7 col-md-5 col-lg-6 col-xl-4">
                                                     <h3>Documentos <small>
                                                         <button v-on:click="toggleView()" v-bind:class="[!list_view ? 'text-primary' : '', 'm-1']"><i class="fas fa-th"></i></button>
                                                         <button v-on:click="toggleView()" v-bind:class="[list_view ? 'text-primary' : '', 'm-1']"><i class="fas fa-list"></i></button>
                                                         </small>
                                                     </h3>
                                                 </div>
+                                                <div class="col-5 col-md-7 col-lg-6 col-xl-8">
+                                                    <input class="form-control form-control-sm" v-model="searchDocumento" type="text" placeholder="Filtra los documentos" aria-label="Ingresa el nombre de un documento para filtrarlo">
+                                                </div>
                                                 <div class="col-12">
                                                     <div class="row">
-                                                        <div :class="ancho_card_archivo" v-for="doc in c_trabajo.documentos" v-bind:key="doc.id">
+                                                        <div :class="ancho_card_archivo" v-for="doc in filteredDocumentos" v-bind:key="doc.id">
                                                             <div class="card text-center">
                                                                 <a :href="this.route('trabajo.documento.show', doc.id)" class="link-dark"  data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Descargar '+doc.descripcion">
                                                                 <div class="card-body">
-                                                                        <i v-if="doc.extension == 'pdf'" class="far fa-file-pdf fa-2x"></i>
-                                                                        <i v-if="doc.extension == 'png' || doc.extension == 'jpg'" class="far fa-image fa-2x"></i>
-                                                                        <p class="text-truncate mb-0">
-                                                                            {{ doc.nombre_original }}
-                                                                        </p>
+                                                                    <i v-if="doc.extension == 'pdf'" class="far fa-file-pdf fa-2x"></i>
+                                                                    <i v-if="doc.extension == 'png' || doc.extension == 'jpg'" class="far fa-image fa-2x"></i>
+                                                                    <p class="text-truncate mb-0">
+                                                                        {{ doc.nombre_original }}
+                                                                    </p>
                                                                 </div>
                                                                 </a>
                                                                 <small><button v-on:click="deleteDocumento(doc.id)"  data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Eliminar documento'"><i class="fas fa-trash-alt"></i></button></small>
@@ -144,11 +147,13 @@
                                                         <div :class="ancho_card_archivo">
                                                             <input type="file" id="file" ref="file" v-on:change="handleFileUpload()" style="position: absolute;top: -500px;"/>
                                                             <div class="card text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Subir nuevo archivo">
-                                                                <div class="card-body" v-on:click="$refs.file.click()">
-                                                                    <i class="fas fa-upload fa-2x" role="button" v-on:click="$refs.file.click()"></i>
-                                                                    <p class="mb-0" role="button" v-on:click="$refs.file.click()"> {{ this.file !== '' ? this.file.name : 'Subir nuevo archivo' }}</p>
+                                                                <div class="card-body" v-on:click="$refs.file.click()" role="button">
+                                                                    <i class="fas fa-upload fa-2x" role="button"></i>
+                                                                    <p class="mb-0" role="button"> {{ this.file !== '' ? this.file.name : 'Subir nuevo archivo' }}</p>
                                                                 </div>
-                                                                <button v-if="this.file !== ''" v-on:click="submitFile()">Subir</button>
+                                                                <div v-if="this.file !== ''" class="card-footer border-top-0 bg-white">
+                                                                    <button class="btn btn-sm btn-secondary" v-on:click="submitFile()">Subir</button>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -193,7 +198,7 @@
                                             </div> -->
                                         </div>
                         <!-- columna derecha -->
-                                        <div class="col-4">
+                                        <div class="col-12 col-lg-4">
                                             <div class="row">
                                                 <div class="col-12">
                                                     <h3>Cliente Info
@@ -206,12 +211,12 @@
                                                     <div class="row" v-for="dato in c_trabajo.cliente.metadatos" v-bind:key="dato.id">
                                                         <div class="col-2" v-if="dato.key == 'telefono'"><i class="fas fa-phone-alt  fa-2x"></i> </div>
                                                         <div class="col-2" v-if="dato.key == 'email'"><i class="fas fa-envelope fa-2x"></i></div>
-                                                        <div class="col-10" v-if="dato.key == 'telefono'"><a :href="'tel:'+dato.value" target="_blank">{{ dato.value }}</a></div>
-                                                        <div class="col-10" v-if="dato.key == 'email'"><a :href="'mailto:'+dato.value" target="_blank">{{ dato.value }}</a></div>
+                                                        <div class="col-10 align-self-center" v-if="dato.key == 'telefono'"><a :href="'tel:'+dato.value" target="_blank">{{ dato.value }}</a></div>
+                                                        <div class="col-10 align-self-center" v-if="dato.key == 'email'"><a :href="'mailto:'+dato.value" target="_blank">{{ dato.value }}</a></div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-2"><i class="fas fa-key fa-2x"></i></div>
-                                                        <div class="col-10">{{ c_trabajo.codigo_trabajo }}</div>
+                                                        <div class="col-10 align-self-center">{{ c_trabajo.codigo_trabajo }}</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -289,6 +294,7 @@
 
         data() {
             return {
+                searchDocumento:'',
                 c_trabajo: {
                     cliente: {
                         id:'',
@@ -298,7 +304,8 @@
                     potencia:{
                         potencias:[{potencia:'',tiempo_uso:'',kwh:'',aparato:''}]
                     },
-                    ubicacion: ''
+                    ubicacion: '',
+                    documentos: []
                 },
                 c_agendamientos: [
                     {
@@ -344,7 +351,7 @@
                     fecha_hora_fin:''
                 }),
                 list_view: false,
-                ancho_card_archivo:'col-3 mb-1'
+                ancho_card_archivo:'col-6 col-lg-3 mb-1'
             }
         },
 
@@ -354,6 +361,11 @@
         },
 
         computed: {
+            filteredDocumentos() {
+            return this.c_trabajo.documentos.filter(item => {
+                return item.nombre_original.toLowerCase().indexOf(this.searchDocumento.toLowerCase()) > -1
+            })
+            }
         },
 
         methods: {
@@ -463,7 +475,7 @@
 
             },
             toggleView(){
-                this.list_view == false ? this.ancho_card_archivo = 'col-12 mb-1' : this.ancho_card_archivo = 'col-3 mb-1'
+                this.list_view == false ? this.ancho_card_archivo = 'col-12 mb-1' : this.ancho_card_archivo = 'col-6 col-lg-3 mb-1'
                 this.list_view == false ? this.list_view = true : this.list_view = false
             },
             cancelarUbicacion(){

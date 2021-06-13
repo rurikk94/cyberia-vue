@@ -71,6 +71,8 @@ Route::put('/profile/{id}/nombre',[MetadatosUsuarioController::class, 'update_no
 Route::delete('/profile/{id}/metadato', [MetadatosUsuarioController::class, 'destroy'])->middleware(['auth', 'verified'])->name('profile.metadato.delete');
 
 Route::get('/trabajos',[TrabajoController::class, 'index'])->middleware(['auth', 'verified'])->name('trabajos');
+Route::post('/trabajo',[TrabajoController::class, 'store'])->middleware(['auth', 'verified'])->name('trabajo.add');
+Route::delete('/trabajo/{id}',[TrabajoController::class, 'destroy'])->middleware(['auth', 'verified'])->name('trabajo.delete');
 Route::get('/trabajo/{id}',[TrabajoController::class, 'show'])->middleware(['auth', 'verified'])->name('trabajos.show');
 Route::put('/trabajo/{id}/nombre',[TrabajoController::class, 'update_nombre'])->middleware(['auth', 'verified'])->name('trabajo.nombre.update');
 Route::put('/trabajo/{id}/descripcion',[TrabajoController::class, 'update_descripcion'])->middleware(['auth', 'verified'])->name('trabajo.descripcion.update');

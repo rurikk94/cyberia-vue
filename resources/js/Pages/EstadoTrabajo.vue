@@ -37,7 +37,7 @@
                                     <button type="button" class="btn btn-primary btn-lg" v-on:click="this.get_c_trabajo = false">Salir</button>
                                 </div>
                                 <div class="row">
-                                    <div class="col-8">
+                                    <div class="col-12 col-lg-8">
                                         <div class="row">
                                             <div class="col-4 d-flex">
                                                 <div class="h3">Trabajo</div>
@@ -169,7 +169,7 @@
                                         </div> -->
                                     </div>
                     <!-- columna derecha -->
-                                    <div class="col-4">
+                                    <div class="col-12 col-lg-4">
                                         <div class="row">
                                             <div class="col-12">
                                                 <h3>Electricista Info
@@ -305,7 +305,7 @@
                     {key:'4',value:'Cotizacón aceptada'},
                 ],
                 list_view: false,
-                ancho_card_archivo:'col-3 mb-1'
+                ancho_card_archivo:'col-6 col-lg-3 mb-1'
             }
         },
 
@@ -338,7 +338,7 @@
                 })
             },
             toggleView(){
-                this.list_view == false ? this.ancho_card_archivo = 'col-12 mb-1' : this.ancho_card_archivo = 'col-3 mb-1'
+                this.list_view == false ? this.ancho_card_archivo = 'col-12 mb-1' : this.ancho_card_archivo = 'col-6 col-lg-3 mb-1'
                 this.list_view == false ? this.list_view = true : this.list_view = false
             },
             toMoment(time,formato) {
