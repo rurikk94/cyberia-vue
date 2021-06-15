@@ -78,7 +78,7 @@
                                                     <div class="h3 ml-auto" v-if="!editandoDescripcion"><small><button v-on:click="editarDescripcion()"><i class="fas fa-edit"></i></button></small></div>
                                                 </div>
                                                 <div class="col-12">
-                                                    <p v-if="!editandoDescripcion">{{c_trabajo.descripcion}}</p>
+                                                    <div v-if="!editandoDescripcion" style="white-space: pre;">{{c_trabajo.descripcion}}</div>
                                                     <div v-if="editandoDescripcion" class="form-floating">
                                                         <textarea v-model="formEdit.descripcion" class="form-control" placeholder="Descripción del trabajo" style="height: 100px"></textarea>
                                                         <label for="floatingTextarea">Descripción</label>
@@ -306,7 +306,7 @@
                                                     </form>
                                                     </div>
                                                 </div>
-                                                <div v-if="c_materiales.length > 0" class="col-12 fs-6 overflow-auto shadow">
+                                                <div v-if="c_trabajo.materiales.length > 0" class="col-12 fs-6 overflow-auto shadow">
 
                                                     <div class="row border bg-body rounded">
                                                         <div class="col-3">
@@ -509,7 +509,7 @@
                 this.formMaterial.precio = 0
             },
             guardarMaterial(){
-                let material = {
+                /* let material = {
                     id: 5,
                     material: {
                         nombre : this.formMaterial.material_id.nombre,
@@ -524,13 +524,14 @@
                 console.log(this.formMaterial)
                 console.log(material)
                 this.c_materiales = this.c_materiales.concat(material);
-                console.log(this.c_materiales)
+                console.log(this.c_materiales) */
 
-                /* axios.post(this.route('agenda.add'),this.formMaterial)
+                this.formMaterial.material_id = this.formMaterial.material_id.id
+
+                axios.post(this.route('trabajo.material.add'),this.formMaterial)
                 .then(res => {
                     var material = res.data.material;
-                    this.c_materiales = this.c_materiales.concat(material);
-                    this.file = '';
+                    this.c_trabajo.materiales = this.c_trabajo.materiales.concat(material);
                     this.$moshaToast('Agregado correctamente',{position: 'bottom-right',type: 'success', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
 
                 })
@@ -539,7 +540,7 @@
                 })
                 .finally((f) => {
                     this.agregandoMaterial = false
-                }) */
+                })
             },
             deleteMaterial(idItem) {
 

@@ -11,6 +11,7 @@ use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\NegocioMaterialController;
 use App\Http\Controllers\MetadatosClienteController;
 use App\Http\Controllers\MetadatosUsuarioController;
+use App\Http\Controllers\TrabajoMaterialController;
 use Inertia\Inertia;
 
 /*
@@ -89,5 +90,6 @@ Route::delete('/agenda/{id}',[AgendamientoController::class, 'destroy'])->middle
 
 Route::get('/trabajo',[TrabajoController::class, 'show_estado'])->middleware(['guest'])->name('trabajo.estado.show');
 Route::post('/trabajo/estado',[TrabajoController::class, 'get_estado'])->middleware(['guest'])->name('trabajos.estado.get');
+Route::post('/trabajo/material',[TrabajoMaterialController::class, 'store'])->middleware(['auth', 'verified'])->name('trabajo.material.add');
 
 require __DIR__.'/auth.php';
