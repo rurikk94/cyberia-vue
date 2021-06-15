@@ -29,4 +29,9 @@ class Material extends Model
     {
         return $this->hasMany(NegocioMaterial::class);
     }
+
+    public function trabajo()
+    {
+        return $this->hasMany(TrabajoMaterial::class);
+    }
 }

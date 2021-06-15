@@ -40,7 +40,7 @@
                                                 <div class="form-floating">
                                                       <label for="material">Material</label>
                                                       <select class="form-control" name="material" id="material" v-model="form.material" required>
-                                                          <option v-for="material in c_materiales" v-bind:key="material.id" :value="material.id">{{material.nombre}} {{material.modelo}} {{material.nombre}}</option>
+                                                          <option v-for="material in c_materiales" v-bind:key="material.id" :value="material.id">{{material.nombre}} {{material.marca}} {{material.modelo}}</option>
                                                       </select>
                                                 </div>
                                             </div>

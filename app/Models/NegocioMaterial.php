@@ -34,4 +34,9 @@ class NegocioMaterial extends Model
     {
         return $this->belongsTo(Material::class, 'material_id');
     }
+
+    public function trabajo_material()
+    {
+        return $this->hasMany(TrabajoMaterial::class);
+    }
 }

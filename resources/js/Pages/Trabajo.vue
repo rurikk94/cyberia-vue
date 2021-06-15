@@ -307,6 +307,7 @@
                                                     </div>
                                                 </div>
                                                 <div v-if="c_materiales.length > 0" class="col-12 fs-6 overflow-auto shadow">
+
                                                     <div class="row border bg-body rounded">
                                                         <div class="col-3">
                                                         Cantidad
@@ -318,7 +319,7 @@
                                                         Precio unitario
                                                         </div>
                                                     </div>
-                                                    <div v-for="material in c_materiales" v-bind:key="material.id" class="row border bg-body rounded">
+                                                    <div v-for="material in c_trabajo.materiales" v-bind:key="material.id" class="row border bg-body rounded">
                                                         <div class="col-3">
                                                             <input class="form-control form-control-sm" v-model="material.cantidad" type="number" placeholder="Cantidad" :aria-label="'Cantidad de' + material.material.nombre" min="1">
                                                         </div>
@@ -326,7 +327,7 @@
                                                         {{material.material.nombre}} {{material.material.marca}} {{material.material.modelo}}
                                                         </div>
                                                         <div class="col-3">
-                                                        {{'$ ' + material.negocio.precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")  }}
+                                                        {{'$ ' + material.precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")  }}
                                                         <small><button v-on:click="deleteMaterial(material.id)"  data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Eliminar Material'"><i class="fas fa-trash-alt"></i></button></small>
                                                         </div>
                                                     </div>
@@ -401,7 +402,8 @@
                         potencias:[{potencia:'',tiempo_uso:'',kwh:'',aparato:''}]
                     },
                     ubicacion: '',
-                    documentos: []
+                    documentos: [],
+                    materiales: [],
                 },
                 c_agendamientos: [
                     {
@@ -717,10 +719,10 @@
             },
             totalPrecio(){
                 let sum = 0
-                for (let i = 0; i < this.c_materiales.length; i++) {
-                    const p = this.c_materiales[i] //material.negocio.precio
+                for (let i = 0; i < this.c_trabajo.materiales.length; i++) {
+                    const p = this.c_trabajo.materiales[i] //material.negocio.precio
                     //const p = this.c_trabajo.potencia.potencias[i];
-                    sum += parseInt(p.negocio.precio) * parseInt(p.cantidad)
+                    sum += parseInt(p.precio) * parseInt(p.cantidad)
                 }
                 return '$ ' + sum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
             },

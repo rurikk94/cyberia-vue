@@ -45,4 +45,9 @@ class Trabajo extends Model
     {
         return $this->hasMany(Documento::class);
     }
+
+    public function materiales()
+    {
+        return $this->hasMany(TrabajoMaterial::class);
+    }
 }

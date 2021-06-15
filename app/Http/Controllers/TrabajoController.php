@@ -103,6 +103,7 @@ class TrabajoController extends Controller
         $user = Auth::user();
         $trabajo = Trabajo::where('id',$id)
             ->with('cliente')->with('cliente.metadatos')->with('documentos')
+            ->with('materiales')->with('materiales.material')->with('materiales.negocio_material')
             ->get();
 
         $agendamientos = Agendamiento::where('trabajo_id',$id)
@@ -115,6 +116,7 @@ class TrabajoController extends Controller
              ->selectRaw('negocio_materials.material_id, materials.nombre, materials.marca, materials.modelo')
              ->join('materials', 'materials.id', '=', 'negocio_materials.material_id')
              //->join('negocios', 'negocios.id', '=', 'negocio_materials.negocio_id')
+             ->where('negocio_materials.electricista_id', $user->id)
              ->groupBy('negocio_materials.material_id')
              ->orderBy('materials.nombre')
              ->get();
