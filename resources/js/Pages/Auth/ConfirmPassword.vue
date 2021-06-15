@@ -7,13 +7,13 @@
 
     <form @submit.prevent="submit">
         <div>
-            <breeze-label for="password" value="Password" />
-            <breeze-input id="password" type="password" class="mt-1 block w-full" v-model="form.password" required autocomplete="current-password" autofocus />
+            <breeze-label for="password" value="Contraseña" />
+            <breeze-input id="password" type="password" class="mt-1 block w-full" v-model="form.password" required autocomplete="current-password" autofocus  pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Debe contener almenos un numero una letra en mayúsculas y otra en minúsculas, y tenga almenos 8 o más carácteres"/>
         </div>
 
         <div class="flex justify-end mt-4">
             <breeze-button class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                Confirm
+                Confirmar
             </breeze-button>
         </div>
     </form>

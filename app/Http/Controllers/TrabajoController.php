@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\DB;
 
 class TrabajoController extends Controller
 {
@@ -110,6 +111,28 @@ class TrabajoController extends Controller
 
         $trabajo = $trabajo->toArray()[0];
         $trabajo["potencia"] = json_decode($trabajo["potencia"]);
+        $material_precio = DB::table('negocio_materials')
+             ->selectRaw('negocio_materials.material_id, materials.nombre, materials.marca, materials.modelo')
+             ->join('materials', 'materials.id', '=', 'negocio_materials.material_id')
+             //->join('negocios', 'negocios.id', '=', 'negocio_materials.negocio_id')
+             ->groupBy('negocio_materials.material_id')
+             ->orderBy('materials.nombre')
+             ->get();
+        $p = [];
+        foreach ($material_precio as $mp) {
+            $material = DB::table('negocio_materials')
+            ->selectRaw('negocio_materials.id, negocio_materials.negocio_id, negocios.nombre, negocios.ubicacion, negocio_materials.precio')
+            ->join('negocios', 'negocios.id', '=', 'negocio_materials.negocio_id')
+            ->where('negocio_materials.material_id', $mp->material_id)
+            //->groupBy('negocio_materials.material_id')
+            ->orderBy('negocio_materials.precio')
+            ->first();
+            $mp->id = $material->id;
+            $mp->precio = $material->precio;
+            $mp->negocio_id = $material->negocio_id;
+            $mp->negocio_nombre = $material->nombre;
+            $mp->negocio_ubicacion = $material->ubicacion;
+        }
 
         $materiales = [
             ["id" => 1,
@@ -131,6 +154,7 @@ class TrabajoController extends Controller
             'trabajo' => $trabajo,
             'agendamientos' => $agendamientos,
             'materiales' => $materiales,
+            'precios' => $material_precio,
         ]);
     }
 

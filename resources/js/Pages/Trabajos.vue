@@ -92,7 +92,7 @@
                                             <button type="button" class="btn btn-success btn-sm" v-on:click="this.agregandoCliente = true">Agregar Nuevo Cliente</button>
                                         </div>
                                         <div class="col-md">
-                                            <button type="submit" class="btn btn-success btn-lg btn-block" v-on:click="addTrabajo()">Agregar</button>
+                                            <button type="submit" class="btn btn-success btn-lg btn-block">Agregar</button>
                                             <button type="button" class="btn btn-danger btn-lg btn-block" v-on:click="this.agregando = false, this.form.reset('nombre_trabajo', 'ubicacion','descripcion', 'cliente_id')">Cancelar</button>
                                         </div>
                                     </div>
@@ -108,19 +108,31 @@
                                 <div class="p-6 bg-white border-b border-gray-200">
                                     <form @submit.prevent="addCliente">
                                     <div class="row g-2">
-                                            <div class="col-md">
+                                            <div class="col-12">
                                                 <label for="nombres">Nuevo Cliente</label>
                                             </div>
-                                            <div class="col-md">
+                                            <div class="col-6">
                                                 <div class="form-floating">
                                                 <input type="text" class="form-control" name="nombres" id="nombres" v-model="formCliente.nombres" required placeholder="nombres">
                                                 <label for="nombres">Nombres</label>
                                                 </div>
                                             </div>
-                                            <div class="col-md">
+                                            <div class="col-6">
                                                 <div class="form-floating">
                                                 <input type="text" class="form-control" name="apellidos" id="apellidos" v-model="formCliente.apellidos" required placeholder="apellidos">
                                                 <label for="apellidos">Apellidos</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-floating">
+                                                <input type="tel" class="form-control" name="telefono" id="telefono" v-model="formCliente.telefono" placeholder="+56912345678">
+                                                <label for="telefono">Teléfono</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-floating">
+                                                <input type="text" class="form-control" name="email" id="email" v-model="formCliente.email" placeholder="email">
+                                                <label for="email">Email</label>
                                                 </div>
                                             </div>
                                             <div class="col-md">
@@ -177,6 +189,8 @@
                 formCliente: this.$inertia.form({
                     nombres: '',
                     apellidos: '',
+                    telefono: '',
+                    email: '',
                 }),
             }
         },

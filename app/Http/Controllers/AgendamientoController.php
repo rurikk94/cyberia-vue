@@ -11,7 +11,13 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Redirect;
 use Carbon\Carbon;
 use App\Mail\AgendamientoEmail;
+use App\Mail\AgendamientoEmailElectricista;
 use Illuminate\Support\Facades\Mail;
+use Spatie\IcalendarGenerator\Components\Calendar;
+use Spatie\IcalendarGenerator\Components\Event;
+use DateTime;
+use Illuminate\Support\Facades\Storage;
+
 
 class AgendamientoController extends Controller
 {
@@ -226,29 +232,52 @@ class AgendamientoController extends Controller
 
         $user = Auth::user();
 
-        /* $materiales_negocio = NegocioMaterial::find($material->id)
-            ->where('electricista_id', $user->id)
-            ->where('negocio_id', $id)
-            ->with('material')->get(); */
+        $ahora = Carbon::now();
 
         $trabajo = Trabajo::where('id',$request->trabajo_id)->with('cliente')->with('electricista')->first();
 
         $emails = MetadatosCliente::where('key','=','email')->where('cliente_id',$trabajo->cliente_id)->get();
         $emails = $emails->toArray();
 
+        $objDemo = new \stdClass();
+        $objDemo->url = url('/trabajo/'.$request->trabajo_id);
+        $objDemo->codigo_trabajo = $trabajo->codigo_trabajo;
+        $objDemo->ubicacion = $trabajo->ubicacion;
+
+        $objDemo->inicio =  Carbon::parse($request->fecha_hora_inicio); // 1975-05-21 22:00:00
+        $objDemo->inicio->setTimezone('America/Santiago')->toDateTimeString();
+        $objDemo->fin =     Carbon::parse($request->fecha_hora_fin); // 1975-05-21 22:00:00
+        $objDemo->fin->setTimezone('America/Santiago')->toDateTimeString();
+
+        $evento = Event::create()
+            ->name('Visita eléctrica '.$trabajo->electricista->name)
+            ->address($trabajo->ubicacion)
+            ->organizer($trabajo->electricista->email, $trabajo->electricista->name)
+            ->description($trabajo->descripcion)
+            ->createdAt($ahora)
+            ->startsAt(new DateTime( $request->fecha_hora_inicio))
+            ->endsAt(new DateTime($request->fecha_hora_fin));
+
+        $calendar = Calendar::create('Laracon online')
+            ->event($evento)
+            ->get();
+
+        $name_file = $trabajo->codigo_trabajo.'_'.$ahora->format('Y-m-d_H-i-s').'.ics';
+        Storage::put('ical/'.$name_file, $calendar);
+
+        $objDemo->ical = $name_file;
+        $objDemo->ahora = $ahora->setTimezone('America/Santiago')->format('d-m-Y H:i:s');
+
+        $objDemo->sender = $trabajo->electricista->name;
+        $objDemo->receiver = $trabajo->electricista->name;
+
+        Mail::to($trabajo->electricista->email)->send(new AgendamientoEmailElectricista($objDemo));
+
+        $objDemo->url = url('/trabajo');
+        $objDemo->sender = $trabajo->electricista->name;
+        $objDemo->receiver = $trabajo->cliente->nombres . ' ' . $trabajo->cliente->apellidos;
+
         foreach ($emails as $e) {
-            $objDemo = new \stdClass();
-            $objDemo->url = url("/trabajo");;
-            $objDemo->codigo_trabajo = $trabajo->codigo_trabajo;
-
-            $objDemo->inicio =  Carbon::parse($request->fecha_hora_inicio); // 1975-05-21 22:00:00
-            $objDemo->inicio->setTimezone('America/Santiago')->toDateTimeString();
-            $objDemo->fin =     Carbon::parse($request->fecha_hora_fin); // 1975-05-21 22:00:00
-            $objDemo->fin->setTimezone('America/Santiago')->toDateTimeString();
-
-            $objDemo->sender = $trabajo->electricista->name;
-            $objDemo->receiver = $trabajo->cliente->nombres . ' ' . $trabajo->cliente->apellidos;
-
             Mail::to($e["value"])->send(new AgendamientoEmail($objDemo));
         }
 
@@ -260,6 +289,7 @@ class AgendamientoController extends Controller
 
         $agendamiento->save();
         $agendamiento = $agendamiento->refresh()->toArray();
+
         return response()->json([
             'agendamiento' => $agendamiento
         ], 200);

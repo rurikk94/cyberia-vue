@@ -59,8 +59,36 @@ class ClienteController extends Controller
         $cliente->electricista_id = $user->id;
 
         $cliente->save();
-
         $data = $cliente->refresh()->toArray();
+
+        if ($request->hasAny(['telefono', 'email']))
+        {
+
+            if ($request->filled('telefono'))
+            {
+                $metadato = new MetadatosCliente;
+                $metadato->key = 'telefono';
+                $metadato->value = $request->telefono;
+                $metadato->cliente_id = $data["id"];
+
+                $metadato->save();
+
+            }
+
+            if ($request->filled('email'))
+            {
+                $metadato = new MetadatosCliente;
+                $metadato->key = 'email';
+                $metadato->value = $request->email;
+                $metadato->cliente_id = $data["id"];
+
+                $metadato->save();
+
+            }
+        }
+
+
+
         return response()->json([
             'cliente' => $data
         ], 200);

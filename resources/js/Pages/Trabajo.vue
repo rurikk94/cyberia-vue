@@ -225,18 +225,18 @@
                                                     <h3>Agendamientos</h3>
                                                     <div class="h3 ml-auto" v-if="!agendando"><small><button v-on:click="agendar()"><i class="fas fa-plus"></i> Agendar</button></small></div>
                                                 </div>
-                                                <div v-if="agendando" class="col-12 fs-6">
-                                                    <div class="shadow mb-2 bg-body rounded">
+                                                <div v-if="agendando" class="col-12 px-0 fs-6">
+                                                    <div class="p-3 shadow mb-2 bg-body rounded">
                                                         <p>Al agendar se enviará un email al cliente indicando su agendamiento.</p>
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <label for="desde">Desde las</label>
-                                                            <input type="datetime-local" id="desde" v-model="agendamiento.fecha_hora_inicio">
+                                                            <input type="datetime-local" id="desde" v-model="agendamiento.fecha_hora_inicio" v-on:change="fecha_inicio()">
                                                         </div>
                                                         <div class="d-flex justify-content-between align-items-center">
                                                                 <label for="hasta">Hasta el</label>
-                                                                <input type="datetime-local" id="hasta" v-model="agendamiento.fecha_hora_fin">
+                                                                <input type="datetime-local" id="hasta" v-model="agendamiento.fecha_hora_fin" v-on:blur="fecha_fin()">
                                                         </div>
-                                                        <div class="d-flex justify-content-around">
+                                                        <div class="d-flex justify-content-around mt-2">
                                                             <button type="button" class="btn btn-primary btn-sm" v-on:click="agendando = false">Cancelar</button>
                                                             <button type="button" class="btn btn-primary btn-sm" v-on:click="guardarAgendamiento()">Agendar</button>
                                                         </div>
@@ -250,7 +250,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div v-else class="col-12 fs-6">
+                                                <div v-else class="col-12 px-0 fs-6">
                                                     <div  class="row">
                                                         <div class="shadow mb-2 bg-body rounded">
                                                             No existen agendamientos
@@ -263,21 +263,47 @@
                                                     <h3>Materiales</h3>
                                                     <div class="h3 ml-auto" v-if="!agregandoMaterial"><small><button v-on:click="material()"><i class="fas fa-plus"></i> Agregar</button></small></div>
                                                 </div>
-                                                <div v-if="agregandoMaterial" class="col-12 fs-6">
-                                                    <div class="shadow mb-2 bg-body rounded">
+                                                <div v-if="agregandoMaterial" class="col-12 px-0 fs-6">
+                                                    <div class="shadow p-3 mb-2 bg-body rounded">
+                                                    <form @submit.prevent="guardarMaterial">
                                                         <p>Al agregar un material, se agrega a la lista de materiales de este trabajo, y se agrega el precio menor que has cotizado.</p>
                                                         <div class="d-flex justify-content-between align-items-center">
-                                                            <label for="desde">Desde las</label>
-                                                            <input type="datetime-local" id="desde" v-model="agendamiento.fecha_hora_inicio">
+                                                            <div class="form-floating">
+                                                                <select class="form-select" id="precio_p" v-model="formMaterial.material_id" required aria-label="Elija un producto para agregar">
+                                                                    <option v-for="precio in c_precios" v-bind:key="precio.material_id" :value="precio">{{precio.nombre}} {{precio.marca}} {{precio.modelo}}</option>
+                                                                </select>
+                                                                <label for="precio_p">Producto a agregar</label>
+                                                            </div>
                                                         </div>
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                                <label for="hasta">Hasta el</label>
-                                                                <input type="datetime-local" id="hasta" v-model="agendamiento.fecha_hora_fin">
+                                                        <div v-if="formMaterial.material_id" class="d-flex justify-content-between align-items-center">
+                                                            <div class="col-4">
+                                                                <label for="vendedor">Vendido por</label>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <input type="text" readonly class="form-control-plaintext" id="vendedor" :value="formMaterial.material_id.negocio_nombre + ' - ' +formMaterial.material_id.negocio_ubicacion">
+                                                            </div>
+                                                        </div>
+                                                        <div v-if="formMaterial.material_id" class="d-flex justify-content-between align-items-center">
+                                                            <div class="col-4">
+                                                                <label for="cantidad">Cantidad</label>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <input type="number" id="cantidad" v-model="formMaterial.cantidad" min="1">
+                                                            </div>
+                                                        </div>
+                                                        <div v-if="formMaterial.material_id" class="d-flex justify-content-between align-items-center">
+                                                            <div class="col-4">
+                                                                <label for="total_precio">Precio Total</label>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <input type="text" readonly class="form-control-plaintext" id="total_precio" :value="'$ ' + (formMaterial.material_id.precio * formMaterial.cantidad).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')  ">
+                                                            </div>
                                                         </div>
                                                         <div class="d-flex justify-content-around">
-                                                            <button type="button" class="btn btn-primary btn-sm" v-on:click="agregandoMaterial = false">Cancelar</button>
-                                                            <button type="button" class="btn btn-primary btn-sm" v-on:click="guardarMaterial()">Agregar</button>
+                                                            <button type="button" class="btn btn-primary btn-sm" v-on:click="agregandoMaterial = false, formMaterial.material_id = null">Cancelar</button>
+                                                            <button type="submit" class="btn btn-primary btn-sm">Agregar</button>
                                                         </div>
+                                                    </form>
                                                     </div>
                                                 </div>
                                                 <div v-if="c_materiales.length > 0" class="col-12 fs-6 overflow-auto shadow">
@@ -305,10 +331,10 @@
                                                         </div>
                                                     </div>
                                                     <div class="row border bg-body rounded">
-                                                        <div class="col-6 offset-3">
+                                                        <div class="col-3 offset-3">
                                                         Total:
                                                         </div>
-                                                        <div class="col-3">
+                                                        <div class="col-6 text-right">
                                                         {{ totalPrecio() }}
                                                         </div>
                                                     </div>
@@ -358,10 +384,12 @@
             trabajo: Object,
             agendamientos: Object,
             materiales: Object,
+            precios: Object,
         },
 
         data() {
             return {
+                diff: 3600000,
                 searchDocumento:'',
                 c_trabajo: {
                     cliente: {
@@ -395,6 +423,9 @@
                         material:Object,
                         cantidad:Number
                     },
+                ],
+                c_precios: [
+                    Object
                 ],
                 estado_avance:[
                     {key:'0',value:'Realizar visita previa'},
@@ -434,8 +465,9 @@
                 }),
                 formMaterial: this.$inertia.form({
                     trabajo_id: this.trabajo.id,
-                    material_id:'',
-                    cantidad:''
+                    material_id:null,
+                    cantidad:1,
+                    precio:0
                 }),
                 list_view: false,
                 ancho_card_archivo:'col-6 col-lg-3 mb-1'
@@ -446,6 +478,7 @@
             this.c_trabajo = this.trabajo
             this.c_agendamientos = this.agendamientos
             this.c_materiales = this.materiales
+            this.c_precios = this.precios
         },
 
         computed: {
@@ -455,17 +488,43 @@
             })
             }
         },
-
         methods: {
+            fecha_inicio(){
+                if (moment(this.agendamiento.fecha_hora_inicio).isBefore(moment()))
+                    this.agendamiento.fecha_hora_inicio = moment().add(10, 'minutes').format('YYYY-MM-DDTHH:mm')
+                this.agendamiento.fecha_hora_fin = moment(this.agendamiento.fecha_hora_inicio).add(this.diff).format('YYYY-MM-DDTHH:mm')
+            },
+            fecha_fin(){
+                if ( moment(this.agendamiento.fecha_hora_fin).isBefore(moment(this.agendamiento.fecha_hora_inicio)) )
+                    this.agendamiento.fecha_hora_fin = moment(this.agendamiento.fecha_hora_inicio).add(1, 'hour').format('YYYY-MM-DDTHH:mm')
+                this.diff = moment(this.agendamiento.fecha_hora_fin).diff(moment(this.agendamiento.fecha_hora_inicio))
+            },
             material(){
                 this.agregandoMaterial = true
                 this.formMaterial.trabajo_id = this.c_trabajo.id
                 this.formMaterial.material_id = ''
-                this.formMaterial.cantidad = ''
+                this.formMaterial.cantidad = 1
+                this.formMaterial.precio = 0
             },
             guardarMaterial(){
+                let material = {
+                    id: 5,
+                    material: {
+                        nombre : this.formMaterial.material_id.nombre,
+                        marca : this.formMaterial.material_id.marca,
+                        modelo : this.formMaterial.material_id.modelo,
+                    },
+                    negocio: {
+                        precio  : this.formMaterial.material_id.precio
+                    },
+                    cantidad: this.formMaterial.cantidad
+                }
+                console.log(this.formMaterial)
+                console.log(material)
+                this.c_materiales = this.c_materiales.concat(material);
+                console.log(this.c_materiales)
 
-                axios.post(this.route('agenda.add'),this.agendamiento)
+                /* axios.post(this.route('agenda.add'),this.formMaterial)
                 .then(res => {
                     var material = res.data.material;
                     this.c_materiales = this.c_materiales.concat(material);
@@ -478,7 +537,7 @@
                 })
                 .finally((f) => {
                     this.agregandoMaterial = false
-                })
+                }) */
             },
             deleteMaterial(idItem) {
 
@@ -559,7 +618,7 @@
             agendar(){
                 this.agendando = true
                 this.agendamiento.id = this.c_trabajo.id
-                this.agendamiento.fecha_hora_inicio = moment().format('YYYY-MM-DDTHH:mm')
+                this.agendamiento.fecha_hora_inicio = moment().add(10, 'minutes').format('YYYY-MM-DDTHH:mm')
                 this.agendamiento.fecha_hora_fin = moment().add(1, 'hours').format('YYYY-MM-DDTHH:mm')
             },
             cancelarNombre(){

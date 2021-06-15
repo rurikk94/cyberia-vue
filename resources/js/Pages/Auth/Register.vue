@@ -3,7 +3,7 @@
 
     <form @submit.prevent="submit">
         <div>
-            <breeze-label for="name" value="Name" />
+            <breeze-label for="name" value="Nombre" />
             <breeze-input id="name" type="text" class="mt-1 block w-full" v-model="form.name" required autofocus autocomplete="name" />
         </div>
 
@@ -13,22 +13,22 @@
         </div>
 
         <div class="mt-4">
-            <breeze-label for="password" value="Password" />
-            <breeze-input id="password" type="password" class="mt-1 block w-full" v-model="form.password" required autocomplete="new-password" />
+            <breeze-label for="password" value="Contraseña" />
+            <breeze-input id="password" type="password" class="mt-1 block w-full" v-model="form.password" required autocomplete="new-password"  pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Debe contener almenos un numero una letra en mayúsculas y otra en minúsculas, y tenga almenos 8 o más carácteres"/>
         </div>
 
         <div class="mt-4">
-            <breeze-label for="password_confirmation" value="Confirm Password" />
-            <breeze-input id="password_confirmation" type="password" class="mt-1 block w-full" v-model="form.password_confirmation" required autocomplete="new-password" />
+            <breeze-label for="password_confirmation" value="Repita la contraseña" />
+            <breeze-input id="password_confirmation" type="password" class="mt-1 block w-full" v-model="form.password_confirmation" required autocomplete="new-password"  pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Debe contener almenos un numero una letra en mayúsculas y otra en minúsculas, y tenga almenos 8 o más carácteres"/>
         </div>
 
         <div class="flex items-center justify-end mt-4">
             <inertia-link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900">
-                Already registered?
+                ¿Ya está registrado?
             </inertia-link>
 
             <breeze-button class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                Register
+                Registrarse
             </breeze-button>
         </div>
     </form>

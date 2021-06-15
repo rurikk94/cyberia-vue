@@ -36,16 +36,16 @@ class AgendamientoEmail extends Mailable
     public function build()
     {
         return $this->from('sender@example.com')
-                    ->view('mails.demo')
-                    ->text('mails.demo_plain')
+                    ->view('mails.cliente')
+                    ->text('mails.cliente_plain')
                     ->with(
                       [
                             'testVarOne' => '1',
                             'testVarTwo' => '2',
                       ])
-                      /* ->attach(public_path('/images').'/demo.jpg', [
-                              'as' => 'demo.jpg',
-                              'mime' => 'image/jpeg',
-                      ]) */;
+                      ->attach(storage_path('app/ical/').$this->demo->ical, [
+                              'as' => 'ical.ics',
+                              'mime' => 'text/calendar',
+                      ]);
     }
 }
