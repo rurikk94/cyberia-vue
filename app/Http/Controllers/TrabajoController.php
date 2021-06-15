@@ -272,6 +272,44 @@ class TrabajoController extends Controller
      * @param  $id
      * @return \Illuminate\Http\Response
      */
+    public function update_potencias(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'aparato' => 'required|string',
+            'potencia' => 'required|integer',
+            'tiempo_uso' => 'required|integer',
+        ]);
+        $user = Auth::user();
+
+        $trabajo = Trabajo::find($id);
+
+        $potencias = json_decode($trabajo->potencia);
+
+        $potencias->potencias[] = [
+            'aparato' => $request->aparato,
+            'potencia' => $request->potencia,
+            'tiempo_uso' => $request->tiempo_uso,
+        ];
+
+
+        $trabajo->potencia = json_encode($potencias);
+
+        $trabajo->save();
+        $data = $trabajo->refresh()->toArray();
+
+        $data["potencia"] = json_decode($data["potencia"]);
+        return response()->json([
+            'trabajo' => $data
+        ], 200);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  $id
+     * @return \Illuminate\Http\Response
+     */
     public function update_nombre(Request $request, $id)
     {
         $validated = $request->validate([
@@ -330,6 +368,46 @@ class TrabajoController extends Controller
         Trabajo::destroy($id);
         return response()->json([
             'trabajo' => $id
+        ], 200);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Trabajo  $trabajo
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy_potencia(Request $request, $id)
+    {
+        $validated = $request->validate([
+            //'trabajo' => 'required|integer',
+            'index' => 'required|integer',
+        ]);
+
+        $user = Auth::user();
+
+        $trabajo = Trabajo::find($id);
+        $index = $request->index;
+
+        $potencias = json_decode($trabajo->potencia, true);
+        $p = $potencias["potencias"];
+        $borrar = $potencias["potencias"][$index];
+
+        unset($potencias["potencias"][$index]);
+        $p = [];
+        foreach ($potencias["potencias"] as $po) {
+            $p[] = $po;
+        }
+        $potencias["potencias"] = $p;
+
+        $trabajo->potencia = json_encode($potencias);
+
+        $trabajo->save();
+        $data = $trabajo->refresh()->toArray();
+
+        $data["potencia"] = json_decode($data["potencia"]);
+        return response()->json([
+            'trabajo' => $data
         ], 200);
     }
 }

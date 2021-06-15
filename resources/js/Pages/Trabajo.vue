@@ -160,8 +160,11 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-12">
+                                                <div class="col-9 col-md-9 col-lg-9 col-xl-9">
                                                     <h3>Calculadora Potencias</h3>
+                                                </div>
+                                                <div class="col-3 col-md-3 col-lg-3 col-xl-3">
+                                                    <button v-on:click="agregandoPotencia = true"><i class="fas fa-plus"></i></button>
                                                 </div>
                                                 <div class="col-12">
                                                     <table class="table">
@@ -171,6 +174,7 @@
                                                                 <th>Potencia (W)</th>
                                                                 <th>Tiempo de Uso (h)</th>
                                                                 <th>KWh</th>
+                                                                <th></th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -179,12 +183,24 @@
                                                                 <td>{{ equipo.potencia }}</td>
                                                                 <td>{{ equipo.tiempo_uso }}</td>
                                                                 <td>{{ equipo.potencia * equipo.tiempo_uso / 1000 }}</td>
+                                                                <td><button v-on:click="eliminarPotencia(i)"><i class="fas fa-trash pr-1"></i></button>
+                                                                </td>
+                                                            </tr>
+                                                            <tr v-if="agregandoPotencia">
+                                                                <td><input type="text" v-model="formPotencia.aparato" placeholder="Nombre del aparato"></td>
+                                                                <td><input type="text" v-model="formPotencia.potencia" placeholder="Potencia"></td>
+                                                                <td><input type="text" v-model="formPotencia.tiempo_uso" placeholder="Tiempo de uso"></td>
+                                                                <td><input type="text" readonly class="form-control-plaintext" :value="formPotencia.potencia * formPotencia.tiempo_uso / 1000"></td>
+                                                                <td><button v-on:click="agregarPotencia()"><i class="fas fa-save pr-1"></i></button>
+                                                                    <button v-on:click="agregandoPotencia = false, formPotencia.reset('aparato', 'potencia', 'tiempo_uso')"><i class="fas fa-trash"></i></button>
+                                                                </td>
                                                             </tr>
                                                             <tr>
                                                                 <td></td>
                                                                 <td></td>
                                                                 <td></td>
                                                                 <td>{{ totalPotencia() }}</td>
+                                                                <td></td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -321,7 +337,7 @@
                                                     </div>
                                                     <div v-for="material in c_trabajo.materiales" v-bind:key="material.id" class="row border bg-body rounded">
                                                         <div class="col-3">
-                                                            <input class="form-control form-control-sm" v-model="material.cantidad" type="number" placeholder="Cantidad" :aria-label="'Cantidad de' + material.material.nombre" min="1">
+                                                            <input class="form-control form-control-sm" v-model="material.cantidad" type="number" placeholder="Cantidad" :aria-label="'Cantidad de' + material.material.nombre" min="1" v-on:change="updateMaterial(material)">
                                                         </div>
                                                         <div class="col-6">
                                                         {{material.material.nombre}} {{material.material.marca}} {{material.material.modelo}}
@@ -471,6 +487,17 @@
                     cantidad:1,
                     precio:0
                 }),
+                formEditMaterial: this.$inertia.form({
+                    id:null,
+                    cantidad:null,
+                    precio:null
+                }),
+                formPotencia: this.$inertia.form({
+                    aparato: '',
+                    potencia: '',
+                    tiempo_uso: ''
+                }),
+                agregandoPotencia : false,
                 list_view: false,
                 ancho_card_archivo:'col-6 col-lg-3 mb-1'
             }
@@ -556,9 +583,9 @@
                 .then((result) => {
                     if (result.isConfirmed) {
 
-                        axios.delete(this.route('agenda.delete',idItem))
+                        axios.delete(this.route('trabajo.material.delete',idItem))
                         .then(res => {
-                            this.c_materiales = this.c_materiales.filter((obj) => {
+                            this.c_trabajo.materiales = this.c_trabajo.materiales.filter((obj) => {
                                 return obj.id !== idItem;
                             })
                             this.$moshaToast('Eliminado correctamente',{position: 'bottom-right',type: 'success', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
@@ -733,7 +760,7 @@
                     const p = this.c_trabajo.potencia.potencias[i];
                     sum += parseInt(p.potencia) * parseInt(p.tiempo_uso)  / 1000
                 }
-                return sum
+                return sum.toFixed(3);
             },
             handleFileUpload(){
                 this.file = this.$refs.file.files[0];
@@ -759,6 +786,75 @@
                 })
 
             },
+            updateMaterial(material){
+                //console.log(material)
+                let idItem = material.id
+                this.formEditMaterial.id = material.id
+                this.formEditMaterial.cantidad = material.cantidad
+                this.formEditMaterial.precio = material.precio
+
+                axios.put(this.route('trabajo.material.update',idItem),this.formEditMaterial)
+                .then(() => {
+
+                    this.c_trabajo.materiales.find(n => n.id === idItem).cantidad = this.formEditMaterial.cantidad
+                    this.c_trabajo.materiales.find(n => n.id === idItem).precio = this.formEditMaterial.precio
+
+                    this.$moshaToast('Editado correctamente',{position: 'bottom-right',type: 'success', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
+                    this.formEditMaterial.reset('cantidad', 'precio');
+                    this.editando = false
+                })
+                .catch((e) => {
+                    this.$moshaToast('Hubo un error',{position: 'bottom-right',type: 'danger', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
+                })
+            },
+            agregarPotencia(){
+
+                let potencia = {
+                    aparato: this.formPotencia.aparato,
+                    potencia: this.formPotencia.potencia,
+                    tiempo_uso: this.formPotencia.tiempo_uso
+                }
+
+                axios.put(this.route('trabajo.potencias.update',this.c_trabajo.id),this.formPotencia)
+                .then(() => {
+
+                    this.c_trabajo.potencia.potencias = this.c_trabajo.potencia.potencias.concat(potencia)
+
+                    this.$moshaToast('Editado correctamente',{position: 'bottom-right',type: 'success', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
+                    this.formPotencia.reset('aparato', 'potencia', 'tiempo_uso');
+                })
+                .catch((e) => {
+                    this.$moshaToast('Hubo un error',{position: 'bottom-right',type: 'danger', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
+                })
+            },
+            eliminarPotencia(index){
+                this.$swal({
+                title: '¿Estás seguro?',
+                text: "No puedes revertir esta eliminación",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, eliminarlo!'
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+
+                        axios.delete(this.route('trabajo.potencias.delete',this.c_trabajo.id),{params: {
+                            'index': index
+                        }})
+                        .then(res => {
+                            this.c_trabajo.potencia.potencias.splice(index, 1)
+
+                            this.$moshaToast('Eliminado correctamente',{position: 'bottom-right',type: 'success', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
+                        })
+                        .catch((e) => {
+                            this.$moshaToast('Hubo un error',{position: 'bottom-right',type: 'danger', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
+                        })
+
+                    }
+                })
+            }
         }
     }
 </script>

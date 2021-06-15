@@ -6,6 +6,7 @@ use App\Models\TrabajoMaterial;
 use App\Models\Trabajo;
 use App\Models\Material;
 use App\Models\NegocioMaterial;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class TrabajoMaterialController extends Controller
@@ -97,22 +98,46 @@ class TrabajoMaterialController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\TrabajoMaterial  $trabajoMaterial
+     * @param $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, TrabajoMaterial $trabajoMaterial)
+    public function update(Request $request, $id)
     {
-        //
+        $validated = $request->validate([
+            'cantidad' => 'integer|min:1',
+            'precio' => 'integer|min:1',
+        ]);
+        $user = Auth::user();
+
+        $material = TrabajoMaterial::find($id);
+
+        if ($request->filled('cantidad')) {
+            $material->cantidad = $request->cantidad;
+        }
+        if ($request->filled('precio')) {
+            $material->precio = $request->precio;
+        }
+
+        $material->save();
+        $data = $material->refresh()->toArray();
+        return response()->json([
+            'material' => $data
+        ], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\TrabajoMaterial  $trabajoMaterial
+     * @param  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(TrabajoMaterial $trabajoMaterial)
+    public function destroy($id)
     {
-        //
+        $user = Auth::user();
+
+        TrabajoMaterial::destroy($id);
+        return response()->json([
+            'material' => $id
+        ], 200);
     }
 }

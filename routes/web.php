@@ -78,6 +78,8 @@ Route::get('/trabajo/{id}',[TrabajoController::class, 'show'])->middleware(['aut
 Route::put('/trabajo/{id}/nombre',[TrabajoController::class, 'update_nombre'])->middleware(['auth', 'verified'])->name('trabajo.nombre.update');
 Route::put('/trabajo/{id}/descripcion',[TrabajoController::class, 'update_descripcion'])->middleware(['auth', 'verified'])->name('trabajo.descripcion.update');
 Route::put('/trabajo/{id}/ubicacion',[TrabajoController::class, 'update_ubicacion'])->middleware(['auth', 'verified'])->name('trabajo.ubicacion.update');
+Route::put('/trabajo/{id}/potencia',[TrabajoController::class, 'update_potencias'])->middleware(['auth', 'verified'])->name('trabajo.potencias.update');
+Route::delete('/trabajo/{id}/potencia',[TrabajoController::class, 'destroy_potencia'])->middleware(['auth', 'verified'])->name('trabajo.potencias.delete');
 Route::get('/trabajo/documento/{id}',[DocumentoController::class, 'show'])->middleware(['auth', 'verified'])->name('trabajo.documento.show');
 Route::get('/trabajo/documento/{id}/{codigo_trabajo}',[DocumentoController::class, 'show_cliente'])->middleware(['guest'])->name('trabajo.cliente.documento.show');
 Route::post('/trabajo/{id}/documento',[DocumentoController::class, 'store'])->middleware(['auth', 'verified'])->name('trabajo.documento.add');
@@ -90,6 +92,9 @@ Route::delete('/agenda/{id}',[AgendamientoController::class, 'destroy'])->middle
 
 Route::get('/trabajo',[TrabajoController::class, 'show_estado'])->middleware(['guest'])->name('trabajo.estado.show');
 Route::post('/trabajo/estado',[TrabajoController::class, 'get_estado'])->middleware(['guest'])->name('trabajos.estado.get');
+
 Route::post('/trabajo/material',[TrabajoMaterialController::class, 'store'])->middleware(['auth', 'verified'])->name('trabajo.material.add');
+Route::put('/trabajo/{id}/material',[TrabajoMaterialController::class, 'update'])->middleware(['auth', 'verified'])->name('trabajo.material.update');
+Route::delete('/trabajo/{id}/material',[TrabajoMaterialController::class, 'destroy'])->middleware(['auth', 'verified'])->name('trabajo.material.delete');
 
 require __DIR__.'/auth.php';
