@@ -44,6 +44,7 @@ class NegocioMaterialController extends Controller
         $validated = $request->validate([
             'material' => 'required|integer',
             'precio' => 'required|integer',
+            'link' => 'string',
         ]);
 
 
@@ -67,6 +68,7 @@ class NegocioMaterialController extends Controller
         $material->material_id = $request->material;
         $material->negocio_id = $id;
         $material->precio = $request->precio;
+        $material->link = $request->link;
 
         $material->save();
         $material->refresh();
@@ -130,12 +132,14 @@ class NegocioMaterialController extends Controller
     {
         $validated = $request->validate([
             'precio' => 'required|integer',
+            'link' => 'string',
         ]);
 
         $material = NegocioMaterial::find($id);
         $user = Auth::user();
 
         $material->precio = $request->precio;
+        $material->link = $request->link;
         //$negocio->electricista_id = $user->id;
 
         $material->save();

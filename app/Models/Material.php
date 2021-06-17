@@ -16,6 +16,8 @@ class Material extends Model
         'nombre',
         'marca',
         'modelo',
+        'link',
+        'imagen',
     ];
 
     protected $dates = ['deleted_at'];

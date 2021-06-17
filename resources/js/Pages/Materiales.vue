@@ -61,6 +61,8 @@
                                                 <label for="modelo">Modelo</label>
                                                 </div>
                                             </div>
+                                    </div>
+                                    <div class="row g-2">
                                             <div class="col-md">
                                                 <button type="submit" class="btn btn-success btn-lg btn-block">Agregar</button>
                                             </div>
@@ -97,6 +99,24 @@
                                                 </div>
                                             </div>
                                             <div class="col-md">
+                                            </div>
+                                    </div>
+                                    <div class="row g-2">
+                                            <div class="col-md">                                                
+                                                <input type="file" id="file" ref="file" v-on:change="handleFileUpload()" style="position: absolute;top: -500px;"/>
+                                                <div class="card text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Subir foto">
+                                                    <div class="card-body" v-on:click="$refs.file.click()" role="button">
+                                                        <i class="fas fa-upload fa-2x" role="button"></i>
+                                                        <p class="mb-0" role="button"> {{ this.file !== '' ? this.file.name : 'Subir foto' }}</p>
+                                                    </div>
+                                                    <div v-if="this.file !== ''" class="card-footer border-top-0 bg-white">
+                                                        <button class="btn btn-sm btn-secondary" v-on:click="submitFile(formEdit)">Subir</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <div class="row g-2">
+                                            <div class="col-md">
                                                 <button type="submit" class="btn btn-success btn-lg btn-block" v-on:click="guardarEdit(formEdit.id)">Guardar</button>
                                                 <button type="button" class="btn btn-danger btn-lg btn-block" v-on:click="this.editando = false">Cancelar</button>
                                             </div>
@@ -112,6 +132,9 @@
                             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                                 <div class="p-6 bg-white border-b border-gray-200">
                                     <div class="row" v-for="material in filteredItems" v-bind:key="material.id">
+                                        <div class="col-2 py-1 m-auto">
+                                            <img class="img-fluid" :src="route('dashboard.i') + '/storage/' + material.imagen.replace('public/', '') " alt="" srcset="">
+                                        </div>
                                         <div class="col py-1 m-auto">{{material.nombre}}
                                         </div>
                                         <div class="col py-1 m-auto">{{material.marca}}
@@ -153,6 +176,7 @@
 
         data() {
             return {
+                file: '',
                 current_materiales:  [],
                 form: this.$inertia.form({
                     nombre: '',
@@ -250,7 +274,31 @@
                 .catch((e) => {
                     this.$moshaToast('Hubo un error',{position: 'bottom-right',type: 'danger', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
                 })
-            }
+            },   
+            handleFileUpload(){
+                this.file = this.$refs.file.files[0];
+            },         
+            submitFile(material){
+                let formData = new FormData();
+                formData.append("material_id", material.id);
+                formData.append('file', this.file);
+                axios.post(this.route('materiales.imagen.add', material.id),formData,{
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(res => {
+                    var material = res.data.material;
+                    //this.c_trabajo.documentos = this.c_trabajo.documentos.concat(documento);
+                    this.file = '';
+                    this.$moshaToast('Agregado correctamente',{position: 'bottom-right',type: 'success', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
+
+                })
+                .catch((e) => {
+                    this.$moshaToast('Hubo un error',{position: 'bottom-right',type: 'danger', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
+                })
+
+            },
         }
     }
 </script>

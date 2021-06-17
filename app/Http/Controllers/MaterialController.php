@@ -7,6 +7,9 @@ use App\Models\Material;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
+
 
 class MaterialController extends Controller
 {
@@ -21,9 +24,18 @@ class MaterialController extends Controller
         $user = Auth::user();
         $materiales = Material::where('electricista_id', $user->id)->get();
 
-        //return view('materiales.index')->with('materiales', $materiales);
+        $mat =$materiales->toArray();
+        $mats = [];
+        foreach ($mat as $m) {
+            //if ($m["imagen"] !== '')
+                //$m["imagen"] = URL::to('/storage/'.$m["imagen"]);
+                //$m["imagen"] = str_replace("public/","",$m["imagen"]);
+            $mats[] = $m;
+        }
+
+        //return view('materiales.index')5->with('materiales', $materiales);
         return Inertia::render('Materiales',[
-            'materiales' => $materiales
+            'materiales' => $mats
         ]);
     }
 
@@ -49,6 +61,7 @@ class MaterialController extends Controller
             'nombre' => 'required|string|max:191',
             'marca' => 'required|string|max:191',
             'modelo' => 'required|string|max:191',
+            'link' => 'string|max:191',
         ]);
 
 
@@ -58,6 +71,7 @@ class MaterialController extends Controller
         $material->nombre = $request->nombre;
         $material->marca = $request->marca;
         $material->modelo = $request->modelo;
+        $material->link = $request->link;
         $material->electricista_id = $user->id;
 
         $material->save();
@@ -67,6 +81,35 @@ class MaterialController extends Controller
             'material' => $data
         ], 200);
     }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function store_imagen(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'file' => 'required|file',
+        ]);
+
+
+        $material = Material::find($id);
+        $user = Auth::user();
+
+        $path = Storage::putFile('public/materiales', $request->file('file'));
+        $material->imagen = $path;
+
+        $material->save();
+
+        $data = $material->refresh()->toArray();
+        return response()->json([
+            'material' => $data
+        ], 200);
+    }
+    
 
     /**
      * Display the specified resource.
@@ -103,6 +146,7 @@ class MaterialController extends Controller
             'nombre' => 'required|string|max:191',
             'marca' => 'required|string|max:191',
             'modelo' => 'required|string|max:191',
+            'link' => 'string|max:191',
         ]);
 
         $material = Material::find($id);
@@ -111,6 +155,7 @@ class MaterialController extends Controller
         $material->nombre = $request->nombre;
         $material->marca = $request->marca;
         $material->modelo = $request->modelo;
+        $material->link = $request->link;
 
         $material->save();
 

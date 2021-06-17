@@ -364,6 +364,7 @@
                                                                 </div>
                                                             <input type="number" v-model="material.precio" min="1" class="form-control form-control-sm">
                                                             </div>
+                                                            <img class="img-fluid" :src="route('dashboard.i') + '/storage/' + material.material.imagen.replace('public/', '') " alt="" srcset="">
                                                         </div>
                                                     </div>
                                                     <div class="row border bg-body rounded">

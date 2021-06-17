@@ -50,6 +50,14 @@
                                                 <label for="precio">precio</label>
                                                 </div>
                                             </div>
+                                            <div class="row g-2">
+                                                    <div class="col-md">
+                                                        <div class="form-floating">
+                                                        <input type="url" class="form-control" name="modelo" id="modelo" v-model="form.link" placeholder="link">
+                                                        <label for="modelo">Enlace al material</label>
+                                                        </div>
+                                                    </div>
+                                            </div>
                                             <div class="col-md">
                                                 <button type="submit" class="btn btn-success btn-lg btn-block">Agregar</button>
                                             </div>
@@ -76,6 +84,14 @@
                                                 <label for="precio">precio</label>
                                                 </div>
                                             </div>
+                                            <div class="row g-2">
+                                                    <div class="col-md">
+                                                        <div class="form-floating">
+                                                        <input type="url" class="form-control" name="modelo" id="modelo" v-model="formEdit.link" placeholder="link">
+                                                        <label for="modelo">Enlace al material</label>
+                                                        </div>
+                                                    </div>
+                                            </div>
                                             <div class="col-md">
                                                 <button type="submit" class="btn btn-success btn-lg btn-block" v-on:click="guardarEdit(formEdit.id)">Guardar</button>
                                                 <button type="button" class="btn btn-danger btn-lg btn-block" v-on:click="this.editando = false">Cancelar</button>
@@ -96,16 +112,23 @@
                                         </div>
                                         <div class="col py-1 m-auto">Precio
                                         </div>
+                                        <div class="col py-1 m-auto"> Enlace
+                                        </div>
                                         <div class="col py-1 m-auto">
                                         </div>
                                     </div>
                                     <div class="row" v-for="material in c_materiales_negocio" v-bind:key="material.id">
+                                        <div class="col-2 py-1 m-auto">
+                                            <img class="img-fluid" :src="route('dashboard.i') + '/storage/' + material.material.imagen.replace('public/', '') " alt="" srcset="">
+                                        </div>
                                         <div class="col py-1 m-auto">{{material.material.nombre}} {{material.material.marca}} {{material.material.modelo}}
                                         </div>
                                         <div class="col py-1 m-auto">{{'$ ' + material.precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")  }}
                                         </div>
+                                        <div class="col py-1 m-auto"><a :href="material.link" target="_blank" rel="noopener noreferrer">{{ material.link }}</a> 
+                                        </div>
                                         <div class="col py-1 m-auto">
-                                            <button type="button" class="btn btn-primary btn-lg" v-on:click="showEdit(material)">Editar Precio</button>
+                                            <button type="button" class="btn btn-primary btn-lg" v-on:click="showEdit(material)">Editar</button>
                                             <button type="button" class="btn btn-danger btn-lg" v-on:click="deleteItem(material.id)">Eliminar</button>
                                         </div>
                                     </div>
@@ -147,11 +170,13 @@
                 form: this.$inertia.form({
                     material: '',
                     precio: '',
+                    link: '',
                 }),
                 formEdit: this.$inertia.form({
                     id: '',
                     material: '',
                     precio: '',
+                    link: '',
                 }),
                 editando: false,
             }
@@ -166,13 +191,14 @@
             add() {
                 axios.post(this.route('negocios.material.add',this.c_negocio.id),{
                     'material': parseInt(this.form.material),
-                    'precio': parseInt(this.form.precio)
+                    'precio': parseInt(this.form.precio),
+                    'link': this.form.link
                     })
                 .then(res => {
                     var material = res.data.material;
 
                     this.c_materiales_negocio = material;
-                    this.form.reset('material', 'precio');
+                    this.form.reset('material', 'precio', 'link');
                     this.$moshaToast('Agregado correctamente',{position: 'bottom-right',type: 'success', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
 
                 })
@@ -216,6 +242,7 @@
                 this.formEdit.id = material.id
                 this.formEdit.material = material.material
                 this.formEdit.precio = material.precio
+                this.formEdit.link = material.link
                 this.editando = true
             },
             guardarEdit(idItem){
@@ -223,6 +250,7 @@
                 .then(() => {
 
                     this.c_materiales_negocio.find(n => n.id === idItem).precio = this.formEdit.precio
+                    this.c_materiales_negocio.find(n => n.id === idItem).link = this.formEdit.link
 
                     this.$moshaToast('Editado correctamente',{position: 'bottom-right',type: 'success', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
                     this.form.reset('material', 'precio');

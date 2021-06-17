@@ -16,6 +16,7 @@ class NegocioMaterial extends Model
         'material_id',
         'negocio_id',
         'precio',
+        'link',
     ];
 
     protected $dates = ['deleted_at'];
