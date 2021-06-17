@@ -76,6 +76,7 @@ Route::post('/trabajo',[TrabajoController::class, 'store'])->middleware(['auth',
 Route::delete('/trabajo/{id}',[TrabajoController::class, 'destroy'])->middleware(['auth', 'verified'])->name('trabajo.delete');
 Route::get('/trabajo/{id}',[TrabajoController::class, 'show'])->middleware(['auth', 'verified'])->name('trabajos.show');
 Route::put('/trabajo/{id}/nombre',[TrabajoController::class, 'update_nombre'])->middleware(['auth', 'verified'])->name('trabajo.nombre.update');
+Route::put('/trabajo/{id}/estado',[TrabajoController::class, 'update_estado'])->middleware(['auth', 'verified'])->name('trabajo.estado.update');
 Route::put('/trabajo/{id}/descripcion',[TrabajoController::class, 'update_descripcion'])->middleware(['auth', 'verified'])->name('trabajo.descripcion.update');
 Route::put('/trabajo/{id}/ubicacion',[TrabajoController::class, 'update_ubicacion'])->middleware(['auth', 'verified'])->name('trabajo.ubicacion.update');
 Route::put('/trabajo/{id}/potencia',[TrabajoController::class, 'update_potencias'])->middleware(['auth', 'verified'])->name('trabajo.potencias.update');

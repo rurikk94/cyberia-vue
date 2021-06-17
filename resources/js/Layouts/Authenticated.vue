@@ -16,7 +16,12 @@
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <breeze-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Dashboard
+                                    Inicio
+                                </breeze-nav-link>
+                            </div>
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <breeze-nav-link :href="route('materiales')" :active="route().current('materiales')">
+                                    Materiales
                                 </breeze-nav-link>
                             </div>
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
@@ -27,16 +32,6 @@
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <breeze-nav-link :href="route('clientes')" :active="route().current('clientes')">
                                     Clientes
-                                </breeze-nav-link>
-                            </div>
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <breeze-nav-link :href="route('materiales')" :active="route().current('materiales')">
-                                    Materiales
-                                </breeze-nav-link>
-                            </div>
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <breeze-nav-link :href="route('profile')" :active="route().current('profile')">
-                                    Mis datos
                                 </breeze-nav-link>
                             </div>
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
@@ -73,6 +68,9 @@
                                     </template>
 
                                     <template #content>
+                                        <breeze-dropdown-link :href="route('profile')" :active="route().current('profile')">
+                                            Mis datos
+                                        </breeze-dropdown-link>
                                         <breeze-dropdown-link :href="route('logout')" method="post" as="button">
                                             Salir
                                         </breeze-dropdown-link>
@@ -97,7 +95,12 @@
                 <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}" class="sm:hidden">
                     <div class="pt-2 pb-3 space-y-1">
                         <breeze-responsive-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
-                            Dashboard
+                            Inicio
+                        </breeze-responsive-nav-link>
+                    </div>
+                    <div class="pt-2 pb-3 space-y-1">
+                        <breeze-responsive-nav-link :href="route('materiales')" :active="route().current('materiales')">
+                            Materiales
                         </breeze-responsive-nav-link>
                     </div>
                     <div class="pt-2 pb-3 space-y-1">
@@ -108,16 +111,6 @@
                     <div class="pt-2 pb-3 space-y-1">
                         <breeze-responsive-nav-link :href="route('clientes')" :active="route().current('clientes')">
                             Clientes
-                        </breeze-responsive-nav-link>
-                    </div>
-                    <div class="pt-2 pb-3 space-y-1">
-                        <breeze-responsive-nav-link :href="route('materiales')" :active="route().current('materiales')">
-                            Materiales
-                        </breeze-responsive-nav-link>
-                    </div>
-                    <div class="pt-2 pb-3 space-y-1">
-                        <breeze-responsive-nav-link :href="route('profile')" :active="route().current('profile')">
-                            Mis datos
                         </breeze-responsive-nav-link>
                     </div>
                     <div class="pt-2 pb-3 space-y-1">
@@ -144,6 +137,9 @@
                         </div>
 
                         <div class="mt-3 space-y-1">
+                            <breeze-responsive-nav-link :href="route('profile')" :active="route().current('profile')">
+                                Mis datos
+                            </breeze-responsive-nav-link>
                             <breeze-responsive-nav-link :href="route('logout')" method="post" as="button">
                                 Salir
                             </breeze-responsive-nav-link>

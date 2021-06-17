@@ -1,6 +1,6 @@
 <template>
     <div class="mb-4 text-sm text-gray-600">
-        Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
+        ¿Olvidó su contraseña? No hay problema. Simplemente háganos saber su dirección de correo electrónico y le enviaremos por correo electrónico un enlace de restablecimiento de contraseña que le permitirá elegir uno nuevo.
     </div>
 
     <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
@@ -11,13 +11,13 @@
 
     <form @submit.prevent="submit">
         <div>
-            <breeze-label for="email" value="Email" />
+            <breeze-label for="email" value="Correo electrónico" />
             <breeze-input id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autofocus autocomplete="username" />
         </div>
 
         <div class="flex items-center justify-end mt-4">
             <breeze-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                Email Password Reset Link
+                Envíame un correo para restablecer mi contraseña
             </breeze-button>
         </div>
     </form>

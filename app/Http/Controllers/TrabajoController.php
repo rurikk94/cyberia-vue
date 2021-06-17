@@ -335,6 +335,46 @@ class TrabajoController extends Controller
      * @param  $id
      * @return \Illuminate\Http\Response
      */
+    public function update_estado(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'estado' => 'required|integer',
+            'change' => 'required|string',
+        ]);
+
+        $user = Auth::user();
+
+        $trabajo = Trabajo::find($id);
+
+        switch ($request->change) {
+            case 'tipo_trabajo':
+                $trabajo->tipo_trabajo = $request->estado;
+                break;
+            case 'cotizacion_estado':
+                $trabajo->cotizacion_estado = $request->estado;
+                break;
+            case 'avance_estado':
+                $trabajo->avance_estado = $request->estado;
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+        $trabajo->save();
+        $data = $trabajo->refresh()->toArray();
+        return response()->json([
+            'trabajo' => $data
+        ], 200);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  $id
+     * @return \Illuminate\Http\Response
+     */
     public function update_ubicacion(Request $request, $id)
     {
         $validated = $request->validate([

@@ -48,7 +48,7 @@
                                                     <h3>Cliente</h3>
                                                 </div>
                                                 <div class="col-8">
-                                                    <inertia-link class="h3 btn btn-link btn-lg" :href="route('clientes.show',c_trabajo.cliente.id)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver Cliente">
+                                                    <inertia-link class="btn-link text-dark h3" :href="route('clientes.show',c_trabajo.cliente.id)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver Cliente">
                                                         {{c_trabajo.cliente.nombres}} {{c_trabajo.cliente.apellidos}}
                                                     </inertia-link>
                                                 </div>
@@ -91,41 +91,50 @@
                                                 <div class="col-4">
                                                     <h3>Tipo de Trabajo</h3>
                                                 </div>
-                                                <div class="col-8">
+                                                <div class="col-7 align-self-center">
                                                     <select class="form-control" v-model="c_trabajo.tipo_trabajo" required>
                                                         <option v-for="tipo_trabajo in tipo_trabajos" v-bind:key="tipo_trabajo.key" :value="tipo_trabajo.key">{{tipo_trabajo.value}}</option>
                                                     </select>
+                                                </div>
+                                                <div class="col-1 align-self-center">
+                                                    <div class="h3 ml-auto"><small><button v-on:click="guardarEstado(this.c_trabajo.tipo_trabajo,'tipo_trabajo')"><i class="fas fa-save"></i></button></small></div>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-4">
                                                     <h3>Estado Cotización</h3>
                                                 </div>
-                                                <div class="col-8">
+                                                <div class="col-7 align-self-center">
                                                     <select class="form-control" v-model="c_trabajo.cotizacion_estado" required>
                                                         <option v-for="estado in estado_cotizacion" v-bind:key="estado.key" :value="estado.key">{{estado.value}}</option>
                                                     </select>
+                                                </div>
+                                                <div class="col-1 align-self-center">
+                                                    <div class="h3 ml-auto"><small><button v-on:click="guardarEstado(this.c_trabajo.cotizacion_estado,'cotizacion_estado')"><i class="fas fa-save"></i></button></small></div>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-4">
                                                     <h3>Estado Avance</h3>
                                                 </div>
-                                                <div class="col-8">
+                                                <div class="col-7 align-self-center">
                                                     <select class="form-control" v-model="c_trabajo.avance_estado" required>
                                                         <option v-for="estado in estado_avance" v-bind:key="estado.key" :value="estado.key">{{estado.value}}</option>
                                                     </select>
                                                 </div>
+                                                <div class="col-1 align-self-center">
+                                                    <div class="h3 ml-auto"><small><button v-on:click="guardarEstado(this.c_trabajo.avance_estado,'avance_estado')"><i class="fas fa-save"></i></button></small></div>
+                                                </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-7 col-md-5 col-lg-6 col-xl-4">
+                                                <div class="col-7 col-md-5 col-lg-6 col-xl-5 col-xxl-4">
                                                     <h3>Documentos <small>
                                                         <button v-on:click="toggleView()" v-bind:class="[!list_view ? 'text-primary' : '', 'm-1']"><i class="fas fa-th"></i></button>
                                                         <button v-on:click="toggleView()" v-bind:class="[list_view ? 'text-primary' : '', 'm-1']"><i class="fas fa-list"></i></button>
                                                         </small>
                                                     </h3>
                                                 </div>
-                                                <div class="col-5 col-md-7 col-lg-6 col-xl-8">
+                                                <div class="col-4 col-md-6 col-lg-5 col-xl-6 col-xxl-7">
                                                     <input class="form-control form-control-sm" v-model="searchDocumento" type="text" placeholder="Filtra los documentos" aria-label="Ingresa el nombre de un documento para filtrarlo">
                                                 </div>
                                                 <div class="col-12">
@@ -161,50 +170,51 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-9 col-md-9 col-lg-9 col-xl-9">
-                                                    <h3>Calculadora Potencias</h3>
+                                                    <h3>Calculadora de Potencias</h3>
                                                 </div>
                                                 <div class="col-3 col-md-3 col-lg-3 col-xl-3">
-                                                    <button v-on:click="agregandoPotencia = true"><i class="fas fa-plus"></i></button>
                                                 </div>
                                                 <div class="col-12">
-                                                    <table class="table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Aparato</th>
-                                                                <th>Potencia (W)</th>
-                                                                <th>Tiempo de Uso (h)</th>
-                                                                <th>KWh</th>
-                                                                <th></th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr v-for="(equipo,i) in c_trabajo.potencia.potencias" v-bind:key="i">
-                                                                <td>{{ equipo.aparato }}</td>
-                                                                <td>{{ equipo.potencia }}</td>
-                                                                <td>{{ equipo.tiempo_uso }}</td>
-                                                                <td>{{ equipo.potencia * equipo.tiempo_uso / 1000 }}</td>
-                                                                <td><button v-on:click="eliminarPotencia(i)"><i class="fas fa-trash pr-1"></i></button>
-                                                                </td>
-                                                            </tr>
-                                                            <tr v-if="agregandoPotencia">
-                                                                <td><input type="text" v-model="formPotencia.aparato" placeholder="Nombre del aparato"></td>
-                                                                <td><input type="text" v-model="formPotencia.potencia" placeholder="Potencia"></td>
-                                                                <td><input type="text" v-model="formPotencia.tiempo_uso" placeholder="Tiempo de uso"></td>
-                                                                <td><input type="text" readonly class="form-control-plaintext" :value="formPotencia.potencia * formPotencia.tiempo_uso / 1000"></td>
-                                                                <td><button v-on:click="agregarPotencia()"><i class="fas fa-save pr-1"></i></button>
-                                                                    <button v-on:click="agregandoPotencia = false, formPotencia.reset('aparato', 'potencia', 'tiempo_uso')"><i class="fas fa-trash"></i></button>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td>{{ totalPotencia() }}</td>
-                                                                <td></td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                    <!-- <p>{{c_trabajo.potencia}}</p> -->
+                                                    <div class="table-responsive">
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Aparato</th>
+                                                                    <th>Potencia (W)</th>
+                                                                    <th>Tiempo de Uso (h)</th>
+                                                                    <th>KWh</th>
+                                                                    <th></th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr v-for="(equipo,i) in c_trabajo.potencia.potencias" v-bind:key="i">
+                                                                    <td>{{ equipo.aparato }}</td>
+                                                                    <td>{{ equipo.potencia }}</td>
+                                                                    <td>{{ equipo.tiempo_uso }}</td>
+                                                                    <td>{{ equipo.potencia * equipo.tiempo_uso / 1000 }}</td>
+                                                                    <td><button v-on:click="eliminarPotencia(i)"><i class="fas fa-trash pr-1"></i></button>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr v-if="agregandoPotencia">
+                                                                    <td><input type="text" v-model="formPotencia.aparato" placeholder="Nombre del aparato"></td>
+                                                                    <td><input type="text" style="width: 60px" v-model="formPotencia.potencia" placeholder="Potencia"></td>
+                                                                    <td><input type="text" style="width: 60px" v-model="formPotencia.tiempo_uso" placeholder="Tiempo de uso"></td>
+                                                                    <td><input type="text" style="width: 60px" readonly class="form-control-plaintext" :value="formPotencia.potencia * formPotencia.tiempo_uso / 1000"></td>
+                                                                    <td><button v-on:click="agregarPotencia()"><i class="fas fa-save pr-1"></i></button>
+                                                                        <button v-on:click="agregandoPotencia = false, formPotencia.reset('aparato', 'potencia', 'tiempo_uso')"><i class="fas fa-trash"></i></button>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><button v-on:click="agregandoPotencia = true"><i class="fas fa-plus"></i> Agregar</button></td>
+                                                                    <td></td>
+                                                                    <td>Total</td>
+                                                                    <td>{{ totalPotencia() }}</td>
+                                                                    <td></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <!-- <p>{{c_trabajo.potencia}}</p> -->
+                                                    </div>
                                                 </div>
                                             </div>
                                             <!-- <div class="row">
@@ -325,26 +335,35 @@
                                                 <div v-if="c_trabajo.materiales.length > 0" class="col-12 fs-6 overflow-auto shadow">
 
                                                     <div class="row border bg-body rounded">
-                                                        <div class="col-3">
+                                                        <div class="col-2 p-0">
                                                         Cantidad
                                                         </div>
                                                         <div class="col-6">
                                                         Material
                                                         </div>
-                                                        <div class="col-3">
+                                                        <div class="col-4 p-0">
                                                         Precio unitario
                                                         </div>
                                                     </div>
                                                     <div v-for="material in c_trabajo.materiales" v-bind:key="material.id" class="row border bg-body rounded">
-                                                        <div class="col-3">
-                                                            <input class="form-control form-control-sm" v-model="material.cantidad" type="number" placeholder="Cantidad" :aria-label="'Cantidad de' + material.material.nombre" min="1" v-on:change="updateMaterial(material)">
+                                                        <div class="col-2 p-0">
+                                                            <input class="form-control form-control-sm" v-model="material.cantidad" type="number" placeholder="Cantidad" :aria-label="'Cantidad de' + material.material.nombre" min="1">
+                                                        </div>
+                                                        
+                                                        <div class="col-1">
+                                                            <small><button v-on:click="updateMaterial(material)"  data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Guardar Material'"><i class="fas fa-save"></i></button></small>
+                                                            <small><button v-on:click="deleteMaterial(material.id)"  data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Eliminar Material'"><i class="fas fa-trash-alt"></i></button></small>
                                                         </div>
                                                         <div class="col-6">
-                                                        {{material.material.nombre}} {{material.material.marca}} {{material.material.modelo}}
+                                                            <p>{{material.material.nombre}} {{material.material.marca}} {{material.material.modelo}}</p>
                                                         </div>
-                                                        <div class="col-3">
-                                                        {{'$ ' + material.precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")  }}
-                                                        <small><button v-on:click="deleteMaterial(material.id)"  data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Eliminar Material'"><i class="fas fa-trash-alt"></i></button></small>
+                                                        <div class="col-3 p-0">
+                                                            <div class="input-group">
+                                                                <div class="input-group-prepend">
+                                                                    <div class="input-group-text p-1">$</div>
+                                                                </div>
+                                                            <input type="number" v-model="material.precio" min="1" class="form-control form-control-sm">
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="row border bg-body rounded">
@@ -447,7 +466,7 @@
                 ],
                 estado_avance:[
                     {key:'0',value:'Realizar visita previa'},
-                    {key:'1',value:'Esperando aprobación presupuesto'},
+                    {key:'1',value:'Esperando aprobación del presupuesto'},
                     {key:'2',value:'Presupuesto aprobado'},
                     {key:'3',value:'Presupuesto rechazado'},
                     {key:'4',value:'Trabajando'},
@@ -460,7 +479,7 @@
                 ],
                 estado_cotizacion:[
                     {key:'0',value:'Obteniendo lista de materiales'},
-                    {key:'1',value:'Cotiznado materiales'},
+                    {key:'1',value:'Cotizando materiales'},
                     {key:'2',value:'Esperando aprobación'},
                     {key:'3',value:'Cotizacón rechazada'},
                     {key:'4',value:'Cotizacón aceptada'},
@@ -496,6 +515,10 @@
                     aparato: '',
                     potencia: '',
                     tiempo_uso: ''
+                }),
+                formEstado: this.$inertia.form({
+                    change:'',
+                    estado:'',
                 }),
                 agregandoPotencia : false,
                 list_view: false,
@@ -785,6 +808,20 @@
                     this.$moshaToast('Hubo un error',{position: 'bottom-right',type: 'danger', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
                 })
 
+            },
+            guardarEstado(estado, change){
+                this.formEstado.estado = estado
+                this.formEstado.change = change
+
+                axios.put(this.route('trabajo.estado.update', this.c_trabajo.id),this.formEstado)
+                .then(() => {
+
+                    this.$moshaToast('Editado correctamente',{position: 'bottom-right',type: 'success', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
+                    this.formEstado.reset('estado', 'change');
+                })
+                .catch((e) => {
+                    this.$moshaToast('Hubo un error',{position: 'bottom-right',type: 'danger', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
+                })
             },
             updateMaterial(material){
                 //console.log(material)
