@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Trabajo;
 use App\Models\Agendamiento;
 use App\Models\Cliente;
+use App\Models\TrabajoMaterial;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade as PDF;
+use Carbon\Carbon;
 
 class TrabajoController extends Controller
 {
@@ -449,5 +452,35 @@ class TrabajoController extends Controller
         return response()->json([
             'trabajo' => $data
         ], 200);
+    }
+
+    // Generate PDF
+    public function create_pdf($id) {
+
+        $trabajo = Trabajo::where('id',$id)
+            ->with('materiales')
+            ->with('materiales.material')
+            ->with('cliente')
+            ->with('cliente.metadatos')
+            ->with('electricista')
+            ->with('electricista.metadato')
+            ->first();
+
+        $t = $trabajo->toArray();
+        $total = 0;
+        foreach ($t["materiales"] as $m) {
+            $total += $m["cantidad"] * $m["precio"];
+        }
+        $trabajo->total = $total ;
+        $trabajo->ahora = Carbon::now()->setTimezone('America/Santiago')->format('d-m-Y H:i');
+
+
+
+        return view('materiales', $trabajo);
+
+        view()->share('materiales',$trabajo);
+        $pdf = PDF::loadView('materiales', $trabajo);
+
+        return $pdf->download('pdf_file.pdf');
     }
 }

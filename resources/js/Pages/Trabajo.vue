@@ -375,6 +375,11 @@
                                                         {{ totalPrecio() }}
                                                         </div>
                                                     </div>
+                                                    <div class="row border bg-body rounded">
+                                                        <div class="col-12">                                                        
+                                                        <a :href="route('trabajo.pdf',c_trabajo.id)" target="_blank" class="text-dark"  data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Exportar trabajo'"><i class="fas fa-cloud-download-alt"></i> Exportar</a>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div v-else class="col-12 fs-6">
                                                     <div  class="row">
