@@ -11,7 +11,7 @@
     </div>
     <div class="row my-3" v-for="dato in c_agenda" v-bind:key="dato.id">
         <div class="col-12 col-md-5 py-1 text-uppercase">
-            <span class="h3 bg-primary text-white p-1 fw-bold">{{ toMoment(dato.fecha_hora_inicio,'DD') }}</span>
+            <span class="h3 bg-naranjito text-white p-1 fw-bold">{{ toMoment(dato.fecha_hora_inicio,'DD') }}</span>
             {{ toMoment(dato.fecha_hora_inicio,'MMM') }} {{ toMoment(dato.fecha_hora_inicio,'ddd') }} {{ toMoment(dato.fecha_hora_inicio,'HH:mm') }}-{{ toMoment(dato.fecha_hora_fin,'HH:mm') }}
         </div>
         <div class="col-12 col-md-5 py-1 m-auto">

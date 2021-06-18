@@ -24,32 +24,6 @@
                             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                                 <div class="p-6 bg-white border-b border-gray-200">
                                     <Agendamiento :agenda_antes="agenda_antes"  :agenda="agenda"  :agenda_despues="agenda_despues" :desde="desde" :hasta="hasta"/>
-                                    <!-- <div class="row">
-                                        <div class="col-12 col-md-4 py-1">
-                                            <h1>Agenda</h1>
-                                        </div>
-                                        <div class="col-12 col-md-8 py-1 text-uppercase my-auto position-relative d-flex align-items-center">
-                                            <span class="text-muted h3 my-auto" v-on:click="getAgenda('antes')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver semana anterior"> <i class="fas fa-chevron-left"></i> </span>
-                                            <span class="text-muted my-auto"> {{ toMoment(c_desde,'LL') }} al {{ toMoment(c_hasta,'LL') }} </span>
-                                            <span class="text-muted h3 my-auto" v-on:click="getAgenda('despues')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver semana próxima"> <i class="fas fa-chevron-right"></i> </span>
-                                        </div>
-                                    </div>
-                                    <div class="row my-3" v-for="dato in c_agenda" v-bind:key="dato.id">
-                                        <div class="col-12 col-md-5 py-1 text-uppercase">
-                                            <span class="h3 bg-primary text-white p-1 fw-bold">{{ toMoment(dato.fecha_hora_inicio,'DD') }}</span>
-                                            {{ toMoment(dato.fecha_hora_inicio,'MMM') }} {{ toMoment(dato.fecha_hora_inicio,'ddd') }} {{ toMoment(dato.fecha_hora_inicio,'HH:mm') }}-{{ toMoment(dato.fecha_hora_fin,'HH:mm') }}
-                                        </div>
-                                        <div class="col-12 col-md-5 py-1 m-auto">
-                                            {{dato.trabajo.nombre_trabajo}}
-                                        </div>
-                                        <div class="col-12 col-md-2 py-1 m-auto">
-                                            <div class="d-grid gap-2">
-                                                <inertia-link class="btn btn-success btn-lg" :href="route('trabajos.show',dato.trabajo.id)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver Trabajo">
-                                                    Ver
-                                                </inertia-link>
-                                            </div>
-                                        </div>
-                                    </div> -->
                                 </div>
                             </div>
                         </div>

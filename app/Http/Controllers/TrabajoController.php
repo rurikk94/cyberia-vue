@@ -140,18 +140,6 @@ class TrabajoController extends Controller
         }
 
         $materiales = [
-            ["id" => 1,
-            "trabajo_id" => 1,
-            "material_id" => 3,
-            "material" => ['nombre' => 'Cable libre de halogenos', 'marca' => 'Bauker', 'modelo' => '(H07Z1K) 2,5 mm2 25 m Verde', ],
-            "negocio" => ['precio' => 1500 ],
-            "cantidad" => 2,],
-            ["id" => 2,
-            "trabajo_id" => 1,
-            "material_id" => 4,
-            "material" => ['nombre' => 'Cable libre de halogenos', 'marca' => 'Bauker', 'modelo' => '(H07Z1K) 2,5 mm2 25 m Rojo', ],
-            "negocio" => ['precio' => 1500 ],
-            "cantidad" => 2,]
         ];
 
 

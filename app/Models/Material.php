@@ -16,7 +16,6 @@ class Material extends Model
         'nombre',
         'marca',
         'modelo',
-        'link',
         'imagen',
     ];
 

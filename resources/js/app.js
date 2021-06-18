@@ -29,6 +29,7 @@ import VCalendar from 'v-calendar';
 /* Vue.component('calendar', Calendar)
 Vue.component('date-picker', DatePicker) */
 //Vue.component('font-awesome-icon', FontAwesomeIcon)
+import '../css/thami.css';
 
 const el = document.getElementById('app');
 

@@ -48,7 +48,7 @@ class TrabajoMaterialController extends Controller
 
 
         $trabajo = Trabajo::find($request->trabajo_id);
-        $negocio_material = NegocioMaterial::where('material_id',$request->material_id)->with("material")->first();
+        $negocio_material = NegocioMaterial::where('id',$request->material_id)->with("material")->first();
 
         $material = new TrabajoMaterial;
 
@@ -66,6 +66,7 @@ class TrabajoMaterialController extends Controller
         $data["material"]["nombre"] = $negocio_material->material->nombre;
         $data["material"]["marca"] = $negocio_material->material->marca;
         $data["material"]["modelo"] = $negocio_material->material->modelo;
+        $data["material"]["imagen"] = $negocio_material->material->imagen;
         return response()->json([
             'material' => $data
         ], 200);

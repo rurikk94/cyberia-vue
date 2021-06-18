@@ -12,6 +12,7 @@ use App\Http\Controllers\NegocioMaterialController;
 use App\Http\Controllers\MetadatosClienteController;
 use App\Http\Controllers\MetadatosUsuarioController;
 use App\Http\Controllers\TrabajoMaterialController;
+use App\Http\Controllers\InicioController;
 use Inertia\Inertia;
 
 /*
@@ -25,19 +26,13 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
+/* Route::get('/', function () {
     return Inertia::render('Dashboard');
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-})->middleware(['auth', 'verified'])->name('dashboard.i');
+})->middleware(['auth', 'verified'])->name('dashboard.i'); */
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('', [InicioController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard.i');
+Route::get('/', [InicioController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard.i');
+Route::get('/dashboard', [InicioController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/negocios', [NegocioController::class, 'index'])->middleware(['auth', 'verified'])->name('negocios');
 Route::post('/negocios', [NegocioController::class, 'store'])->middleware(['auth', 'verified'])->name('negocios.add');

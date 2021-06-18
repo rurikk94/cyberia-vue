@@ -565,22 +565,7 @@
                 this.formMaterial.precio = 0
             },
             guardarMaterial(){
-                /* let material = {
-                    id: 5,
-                    material: {
-                        nombre : this.formMaterial.material_id.nombre,
-                        marca : this.formMaterial.material_id.marca,
-                        modelo : this.formMaterial.material_id.modelo,
-                    },
-                    negocio: {
-                        precio  : this.formMaterial.material_id.precio
-                    },
-                    cantidad: this.formMaterial.cantidad
-                }
-                console.log(this.formMaterial)
-                console.log(material)
-                this.c_materiales = this.c_materiales.concat(material);
-                console.log(this.c_materiales) */
+                this.agregandoMaterial = false
 
                 this.formMaterial.material_id = this.formMaterial.material_id.id
 
