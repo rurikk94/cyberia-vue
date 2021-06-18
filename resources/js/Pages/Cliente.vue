@@ -189,8 +189,8 @@
                                             {{dato.value}}
                                         </div>
                                         <div class="col-2 d-flex justify-content-around">
-                                            <a :href="'https://www.google.com/maps/place/'+dato.value" target="_blank" class="text-dark"><i class="fas fa-map-marked-alt  fa-2x" alt="Google Maps"></i></a>
-                                            <a :href="'https://waze.com/ul?q='+dato.value" target="_blank" class="text-dark"><i class="fab fa-waze fa-2x" alt="Waze"></i></a>
+                                            <a :href="'https://www.google.com/maps/place/'+dato.value" target="_blank" class="text-dark" title="Enviar mensaje por whatsapp" aria-label="Enviar mensaje por whatsapp"><i class="fas fa-map-marked-alt  fa-2x" alt="Google Maps"></i></a>
+                                            <a :href="'https://waze.com/ul?q='+dato.value" target="_blank" class="text-dark" title="Abrir ubicación en Waze" aria-label="Abrir ubicación en Waze"><i class="fab fa-waze fa-2x" alt="Waze"></i></a>
                                         </div>
                                         <div class="col-4 py-1 m-auto">
                                             <button type="button" class="btn btn-primary btn-lg" v-on:click="showEdit(dato)">Editar</button>

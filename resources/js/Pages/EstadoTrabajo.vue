@@ -154,7 +154,7 @@
                                                         <tr>
                                                             <td></td>
                                                             <td></td>
-                                                            <td></td>
+                                                            <td>Total</td>
                                                             <td>{{ totalPotencia() }}</td>
                                                         </tr>
                                                     </tbody>
@@ -225,7 +225,67 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h3>Materiales</h3>
+                                            </div>
+                                            <div v-if="c_trabajo.materiales.length > 0" class="col-12 fs-6 shadow">
+
+                                                <div class="row border bg-body rounded">
+                                                    <div class="col-2 p-0">
+                                                    Cantidad
+                                                    </div>
+                                                    <div class="col-6">
+                                                    Material
+                                                    </div>
+                                                    <div class="col-4 p-0">
+                                                    Precio unitario
+                                                    </div>
+                                                </div>
+                                                <div v-for="material in c_trabajo.materiales" v-bind:key="material.id" class="row border bg-body rounded">
+                                                    <div class="col-2 p-0">
+                                                        <input class="form-control form-control-sm" v-model="material.cantidad" type="number" placeholder="Cantidad" :aria-label="'Cantidad de' + material.material.nombre" min="1">
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <p>{{material.material.nombre}} {{material.material.marca}} {{material.material.modelo}}</p>
+                                                    </div>
+                                                    <div class="col-3 p-0">
+                                                        <div class="input-group">
+                                                            <div class="input-group-prepend">
+                                                                <div class="input-group-text p-1">$</div>
+                                                            </div>
+                                                        <input type="number" v-model="material.precio" min="1" class="form-control form-control-sm">
+                                                        </div>
+                                                        <img class="img-fluid" :src="route('dashboard.i') + '/storage/' + material.material.imagen.replace('public/', '') " alt="" srcset="">
+                                                    </div>
+                                                </div>
+                                                <div class="row border bg-body rounded">
+                                                    <div class="col-3 offset-3">
+                                                    Total:
+                                                    </div>
+                                                    <div class="col-6 text-right">
+                                                    {{ totalPrecio() }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div v-else class="col-12 fs-6">
+                                                <div  class="row">
+                                                    <div class="shadow mb-2 bg-body rounded">
+                                                        No existen materiales
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 fs-6">
+                                                <div class="row border bg-body rounded">
+                                                    <div class="col-12 text-center">
+                                                    <a :href="route('trabajo.pdf.cliente.show',[c_trabajo.id, c_trabajo.codigo_trabajo])" target="_blank" class="text-dark"  data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Exportar trabajo'"><i class="fas fa-cloud-download-alt"></i> Exportar</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                 </div>
                             </div>
                         </div>
@@ -275,6 +335,7 @@
                         name:'',
                         metadato:[{potencia:'',tiempo_uso:'',kwh:'',aparato:''}]
                     },
+                    materiales: [],
                 },
                 c_agendamientos: [
                     {
@@ -286,7 +347,7 @@
                 ],
                 estado_avance:[
                     {key:'0',value:'Realizar visita previa'},
-                    {key:'1',value:'Esperando aprobación presupuesto'},
+                    {key:'1',value:'Esperando aprobación del presupuesto'},
                     {key:'2',value:'Presupuesto aprobado'},
                     {key:'3',value:'Presupuesto rechazado'},
                     {key:'4',value:'Trabajando'},
@@ -299,7 +360,7 @@
                 ],
                 estado_cotizacion:[
                     {key:'0',value:'Obteniendo lista de materiales'},
-                    {key:'1',value:'Cotiznado materiales'},
+                    {key:'1',value:'Cotizando materiales'},
                     {key:'2',value:'Esperando aprobación'},
                     {key:'3',value:'Cotizacón rechazada'},
                     {key:'4',value:'Cotizacón aceptada'},
@@ -345,6 +406,15 @@
                 var stillUtc = moment.utc(time).toDate();
                 //var local = moment(stillUtc).local().format('YYYY-MM-DD HH:mm:ss');
                 return moment(stillUtc).locale('es-mx').local().format(formato);
+            },
+            totalPrecio(){
+                let sum = 0
+                for (let i = 0; i < this.c_trabajo.materiales.length; i++) {
+                    const p = this.c_trabajo.materiales[i] //material.negocio.precio
+                    //const p = this.c_trabajo.potencia.potencias[i];
+                    sum += parseInt(p.precio) * parseInt(p.cantidad)
+                }
+                return '$ ' + sum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
             },
             totalPotencia(){
                 let sum = 0

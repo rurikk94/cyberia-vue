@@ -35,7 +35,7 @@ class AgendamientoEmail extends Mailable
      */
     public function build()
     {
-        return $this->from('sender@example.com')
+        return $this->from('sender@example.com','Cyberia')
                     ->view('mails.cliente')
                     ->text('mails.cliente_plain')
                     ->with(

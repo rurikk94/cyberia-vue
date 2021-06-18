@@ -84,7 +84,7 @@ class TrabajoController extends Controller
         $trabajo->descripcion  = $request->descripcion;
         $trabajo->cotizacion_estado  = 1;
         $trabajo->avance_estado  = 0;
-        $trabajo->potencia  = '{"potencias": [{"kwh": 2.5, "aparato": "Luces", "potencia": 500, "tiempo_uso": 5}]}';
+        $trabajo->potencia  = '{"potencias": []}';
         $trabajo->tipo_trabajo  = 1;
 
         $trabajo->save();
@@ -123,7 +123,7 @@ class TrabajoController extends Controller
              ->groupBy('negocio_materials.material_id')
              ->orderBy('materials.nombre')
              ->get();
-        $p = [];
+
         foreach ($material_precio as $mp) {
             $material = DB::table('negocio_materials')
             ->selectRaw('negocio_materials.id, negocio_materials.negocio_id, negocios.nombre, negocios.ubicacion, negocio_materials.precio')
@@ -193,6 +193,7 @@ class TrabajoController extends Controller
         $trabajo = Trabajo::where('codigo_trabajo',$request->codigo_trabajo)
             ->with('cliente')->with('cliente.metadatos')->with('documentos')
             ->with('electricista')->with('electricista.metadato')
+            ->with('materiales')->with('materiales.material')->with('materiales.negocio_material')
             ->first();
 
         $agendamientos = Agendamiento::where('trabajo_id',$trabajo->id)
@@ -347,7 +348,7 @@ class TrabajoController extends Controller
             case 'avance_estado':
                 $trabajo->avance_estado = $request->estado;
                 break;
-            
+
             default:
                 # code...
                 break;
@@ -446,6 +447,36 @@ class TrabajoController extends Controller
     public function create_pdf($id) {
 
         $trabajo = Trabajo::where('id',$id)
+            ->with('materiales')
+            ->with('materiales.material')
+            ->with('cliente')
+            ->with('cliente.metadatos')
+            ->with('electricista')
+            ->with('electricista.metadato')
+            ->first();
+
+        $t = $trabajo->toArray();
+        $total = 0;
+        foreach ($t["materiales"] as $m) {
+            $total += $m["cantidad"] * $m["precio"];
+        }
+        $trabajo->total = $total ;
+        $trabajo->ahora = Carbon::now()->setTimezone('America/Santiago')->format('d-m-Y H:i');
+
+
+
+        return view('materiales', $trabajo);
+
+        view()->share('materiales',$trabajo);
+        $pdf = PDF::loadView('materiales', $trabajo);
+
+        return $pdf->download('pdf_file.pdf');
+    }
+    // Generate PDF
+    public function create_pdf_cliente($id,$codigo_trabajo) {
+
+        $trabajo = Trabajo::where('id',$id)
+            ->where('codigo_trabajo', $codigo_trabajo)
             ->with('materiales')
             ->with('materiales.material')
             ->with('cliente')

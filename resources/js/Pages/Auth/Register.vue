@@ -27,7 +27,7 @@
                 ¿Ya está registrado?
             </inertia-link>
 
-            <breeze-button class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+            <breeze-button class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing || form.password !== form.password_confirmation">
                 Registrarse
             </breeze-button>
         </div>

@@ -35,7 +35,7 @@ class AgendamientoEmailElectricista extends Mailable
      */
     public function build()
     {
-        return $this->from('sender@example.com')
+        return $this->from('sender@example.com','Cyberia')
                     ->view('mails.electricista')
                     ->text('mails.electricista_plain')
                     ->with(

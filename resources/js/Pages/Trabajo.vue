@@ -48,7 +48,7 @@
                                                     <h3>Cliente</h3>
                                                 </div>
                                                 <div class="col-8">
-                                                    <inertia-link class="btn-link text-dark h3" :href="route('clientes.show',c_trabajo.cliente.id)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver Cliente" :aria-label="'Enlace para ver los datos del cliente ' +c_trabajo.cliente.nombres + ' ' + c_trabajo.cliente.apellidos">
+                                                    <inertia-link class="btn-link text-primary h3" :href="route('clientes.show',c_trabajo.cliente.id)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver Cliente" :aria-label="'Enlace para ver los datos del cliente ' +c_trabajo.cliente.nombres + ' ' + c_trabajo.cliente.apellidos">
                                                         {{c_trabajo.cliente.nombres}} {{c_trabajo.cliente.apellidos}}
                                                     </inertia-link>
                                                 </div>
@@ -196,16 +196,16 @@
                                                                     </td>
                                                                 </tr>
                                                                 <tr v-if="agregandoPotencia">
-                                                                    <td><input type="text" v-model="formPotencia.aparato" placeholder="Nombre del aparato"></td>
-                                                                    <td><input type="text" style="width: 60px" v-model="formPotencia.potencia" placeholder="Potencia"></td>
-                                                                    <td><input type="text" style="width: 60px" v-model="formPotencia.tiempo_uso" placeholder="Tiempo de uso"></td>
+                                                                    <td><input type="text" required v-model="formPotencia.aparato" placeholder="Nombre del aparato"></td>
+                                                                    <td><input type="number" required style="width: 60px" v-model="formPotencia.potencia" placeholder="Potencia"></td>
+                                                                    <td><input type="number" required style="width: 60px" v-model="formPotencia.tiempo_uso" placeholder="Tiempo de uso"></td>
                                                                     <td><input type="text" style="width: 60px" readonly class="form-control-plaintext" :value="formPotencia.potencia * formPotencia.tiempo_uso / 1000"></td>
-                                                                    <td><button v-on:click="agregarPotencia()" data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Agregar Potencia'"><i class="fas fa-save pr-1"></i></button>
+                                                                    <td><button type="submit" v-on:click="agregarPotencia()" data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Agregar Potencia'" class="pr-1"><i class="fas fa-save"></i></button>
                                                                         <button v-on:click="agregandoPotencia = false, formPotencia.reset('aparato', 'potencia', 'tiempo_uso')"  data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Cancelar'"><i class="fas fa-trash"></i></button>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td><button v-on:click="agregandoPotencia = true"><i class="fas fa-plus"></i> Agregar</button></td>
+                                                                    <td><button v-on:click="agregandoPotencia = true" title="Agregar un aparato a la calculadora de potencias" aria-label="Agregar un aparato a la calculadora de potencias"><i class="fas fa-plus"></i> Agregar</button></td>
                                                                     <td></td>
                                                                     <td>Total</td>
                                                                     <td>{{ totalPotencia() }}</td>
@@ -256,7 +256,7 @@
                                                         <p>Al agendar se enviará un email al cliente indicando su agendamiento.</p>
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <label for="desde">Desde las</label>
-                                                            <input type="datetime-local" id="desde" v-model="agendamiento.fecha_hora_inicio" v-on:change="fecha_inicio()">
+                                                            <input type="datetime-local" id="desde" v-model="agendamiento.fecha_hora_inicio" v-on:blur="fecha_inicio()">
                                                         </div>
                                                         <div class="d-flex justify-content-between align-items-center">
                                                                 <label for="hasta">Hasta el</label>
@@ -276,7 +276,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div v-else class="col-12 px-0 fs-6">
+                                                <div v-else class="col-12 fs-6">
                                                     <div  class="row">
                                                         <div class="shadow mb-2 bg-body rounded">
                                                             No existen agendamientos
@@ -349,7 +349,7 @@
                                                         <div class="col-2 p-0">
                                                             <input class="form-control form-control-sm" v-model="material.cantidad" type="number" placeholder="Cantidad" :aria-label="'Cantidad de' + material.material.nombre" min="1">
                                                         </div>
-                                                        
+
                                                         <div class="col-1">
                                                             <small><button v-on:click="updateMaterial(material)"  data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Guardar Material'"><i class="fas fa-save"></i></button></small>
                                                             <small><button v-on:click="deleteMaterial(material.id)"  data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Eliminar Material'"><i class="fas fa-trash-alt"></i></button></small>
@@ -375,20 +375,18 @@
                                                         {{ totalPrecio() }}
                                                         </div>
                                                     </div>
-                                                    <div class="row border bg-body rounded">
-                                                        <div class="col-12">                                                        
-                                                        <a :href="route('trabajo.pdf',c_trabajo.id)" target="_blank" class="text-dark"  data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Exportar trabajo'"><i class="fas fa-cloud-download-alt"></i> Exportar</a>
-                                                        </div>
-                                                    </div>
                                                 </div>
                                                 <div v-else class="col-12 fs-6">
                                                     <div  class="row">
                                                         <div class="shadow mb-2 bg-body rounded">
                                                             No existen materiales
-                                                            <br/>
-                                                            {{ c_materiales}}
-                                                            <br/>
-                                                            {{ materiales}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 fs-6">
+                                                    <div class="row border bg-body rounded">
+                                                        <div class="col-12 text-center">
+                                                        <a :href="route('trabajo.pdf',trabajo.id)" target="_blank" class="text-dark"  data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Exportar trabajo'"><i class="fas fa-cloud-download-alt"></i> Exportar</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -642,6 +640,7 @@
             },
             guardarAgendamiento(){
                 this.agendando = false
+                this.$moshaToast('Se está registrando el agendamiento.',{position: 'bottom-right',type: 'info', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
 
                 this.agendamiento.fecha_hora_inicio = moment(this.agendamiento.fecha_hora_inicio).utc().format('YYYY-MM-DDTHH:mm')
                 this.agendamiento.fecha_hora_fin = moment(this.agendamiento.fecha_hora_fin).utc().format('YYYY-MM-DDTHH:mm')

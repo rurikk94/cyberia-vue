@@ -83,6 +83,7 @@ Route::get('/trabajo/documento/{id}/{codigo_trabajo}',[DocumentoController::clas
 Route::post('/trabajo/{id}/documento',[DocumentoController::class, 'store'])->middleware(['auth', 'verified'])->name('trabajo.documento.add');
 Route::delete('/trabajo/{id}/documento',[DocumentoController::class, 'destroy'])->middleware(['auth', 'verified'])->name('trabajo.documento.delete');
 Route::get('/trabajo/{id}/pdf',[TrabajoController::class, 'create_pdf'])->middleware(['auth', 'verified'])->name('trabajo.pdf');
+Route::get('/trabajo/{id}/{codigo_trabajo}/pdf',[TrabajoController::class, 'create_pdf_cliente'])->middleware(['guest'])->name('trabajo.pdf.cliente.show');
 
 Route::get('/agenda',[AgendamientoController::class, 'index'])->middleware(['auth', 'verified'])->name('agenda');
 Route::get('/calendario',[AgendamientoController::class, 'calendario'])->middleware(['auth', 'verified'])->name('calendario');
