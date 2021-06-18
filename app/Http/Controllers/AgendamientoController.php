@@ -148,8 +148,8 @@ class AgendamientoController extends Controller
         ]);
         $user = Auth::user();
 
-        $desde = Carbon::now()->startOfMonth();
-        $hasta = Carbon::now()->endOfMonth();
+        $desde = Carbon::now()->subWeeks(24)->startOfMonth();
+        $hasta = Carbon::now()->addWeeks(24)->endOfMonth();
 
         if ($request->hasAny(['desde', 'hasta']))
         {

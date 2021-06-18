@@ -27,20 +27,23 @@
                                     class="custom-calendar max-w-full"
                                     :masks="masks"
                                     :attributes="attributes"
-                                    disable-page-swipe
                                     is-expanded
                                     >
                                     <template v-slot:day-content="{ day, attributes }">
                                         <div class="flex flex-col h-full z-10 overflow-hidden">
                                         <span class="day-label text-sm text-gray-900">{{ day.day }}</span>
                                         <div class="flex-grow overflow-y-auto overflow-x-auto">
-                                            <a
+                                            <template
                                             v-for="attr in attributes"
-                                            :key="attr.key"
-                                            class="text-xs leading-tight rounded-sm p-1 mt-0 mb-1"
-                                            :class="attr.customData.class" :href="route('trabajos.show',attr.key)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver Trabajo">
-                                            {{ attr.customData.title }}
-                                            </a>
+                                            :key="attr.key">
+                                                <inertia-link
+                                                class="text-xs leading-tight rounded-sm p-1 mt-0 mb-1 "
+                                                :class="attr.customData.class + ' bg-moradito'"
+                                                :href="route('trabajos.show',attr.key)"
+                                                data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver Trabajo">
+                                                    {{ attr.customData.title }}
+                                                </inertia-link><br/>
+                                            </template>
 
                                         </div>
                                         </div>
@@ -111,8 +114,6 @@
             this.c_hasta = this.hasta
 
             this.attributes = this.agenda
-
-            console.log(this.attributes)
         },
 
         computed: {
