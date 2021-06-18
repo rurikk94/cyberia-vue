@@ -7,9 +7,9 @@
                     <div class="py-2">
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                                <div class="p-6 bg-white border-b border-gray-200">
+                                <div class="px-6 py-3 bg-white border-b border-gray-200">
                                     <nav aria-label="breadcrumb">
-                                        <ol class="breadcrumb">
+                                        <ol class="breadcrumb my-auto">
                                             <li class="breadcrumb-item"><inertia-link :href="route('dashboard')">Inicio</inertia-link></li>
                                             <li class="breadcrumb-item"><inertia-link :href="route('agenda')">Agenda</inertia-link></li>
                                             <li class="breadcrumb-item active" aria-current="page">Trabajo</li>
@@ -29,7 +29,7 @@
                                             <div class="row">
                                                 <div class="col-4 d-flex">
                                                     <div class="h3">Trabajo</div>
-                                                    <div class="h3 ml-auto" v-if="!editandoNombre"><small><button v-on:click="editarNombre()"><i class="fas fa-edit"></i></button></small></div>
+                                                    <div class="h3 ml-auto" v-if="!editandoNombre"><small><button v-on:click="editarNombre()" data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Editar'" aria-label="Editar nombre del trabajo"><i class="fas fa-edit"></i></button></small></div>
                                                 </div>
                                                 <div class="col-8" v-if="!editandoNombre">
                                                     <h3>{{ c_trabajo.nombre_trabajo }}</h3>
@@ -48,7 +48,7 @@
                                                     <h3>Cliente</h3>
                                                 </div>
                                                 <div class="col-8">
-                                                    <inertia-link class="btn-link text-dark h3" :href="route('clientes.show',c_trabajo.cliente.id)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver Cliente">
+                                                    <inertia-link class="btn-link text-dark h3" :href="route('clientes.show',c_trabajo.cliente.id)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver Cliente" :aria-label="'Enlace para ver los datos del cliente ' +c_trabajo.cliente.nombres + ' ' + c_trabajo.cliente.apellidos">
                                                         {{c_trabajo.cliente.nombres}} {{c_trabajo.cliente.apellidos}}
                                                     </inertia-link>
                                                 </div>
@@ -56,7 +56,7 @@
                                             <div class="row">
                                                 <div class="col-4 d-flex">
                                                     <div class="h3">Ubicación</div>
-                                                    <div class="h3 ml-auto" v-if="!editandoUbicacion"><small><button v-on:click="editarUbicacion()"><i class="fas fa-edit"></i></button></small></div>
+                                                    <div class="h3 ml-auto" v-if="!editandoUbicacion"><small><button v-on:click="editarUbicacion()" data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Editar'"><i class="fas fa-edit"></i></button></small></div>
                                                 </div>
                                                 <div class="col-6">
                                                     <h4 v-if="!editandoUbicacion"> {{c_trabajo.ubicacion}} </h4>
@@ -64,18 +64,18 @@
                                                         <textarea v-model="formEdit.ubicacion" class="form-control" placeholder="Ubicación del trabajo" style="height: 100px"></textarea>
                                                         <label for="floatingTextarea">Ubicación</label>
                                                     </div>
-                                                    <button v-if="editandoUbicacion" type="button" class="btn btn-primary btn-sm" v-on:click="cancelarUbicacion()">Cancelar</button>
                                                     <button v-if="editandoUbicacion" type="button" class="btn btn-primary btn-sm" v-on:click="guardarUbicacion()">Guardar</button>
+                                                    <button v-if="editandoUbicacion" type="button" class="btn btn-light btn-sm" v-on:click="cancelarUbicacion()">Cancelar</button>
                                                 </div>
                                                 <div class="col-2 d-flex justify-content-around">
-                                                    <a :href="'https://www.google.com/maps/place/'+c_trabajo.ubicacion" target="_blank" class="text-dark"><i class="fas fa-map-marked-alt  fa-2x" alt="Google Maps"></i></a>
-                                                    <a :href="'https://waze.com/ul?q='+c_trabajo.ubicacion" target="_blank" class="text-dark"><i class="fab fa-waze fa-2x" alt="Waze"></i></a>
+                                                    <a :href="'https://www.google.com/maps/place/'+c_trabajo.ubicacion" target="_blank" class="text-dark"  data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Abrir en Google Maps'"><i class="fas fa-map-marked-alt  fa-2x" alt="Google Maps"></i></a>
+                                                    <a :href="'https://waze.com/ul?q='+c_trabajo.ubicacion" target="_blank" class="text-dark" data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Abrir en Waze'"><i class="fab fa-waze fa-2x" alt="Waze"></i></a>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-4 d-flex">
                                                     <div class="h3">Descripción</div>
-                                                    <div class="h3 ml-auto" v-if="!editandoDescripcion"><small><button v-on:click="editarDescripcion()"><i class="fas fa-edit"></i></button></small></div>
+                                                    <div class="h3 ml-auto" v-if="!editandoDescripcion"><small><button v-on:click="editarDescripcion()" data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Editar'"><i class="fas fa-edit"></i></button></small></div>
                                                 </div>
                                                 <div class="col-12">
                                                     <div v-if="!editandoDescripcion" style="white-space: pre;">{{c_trabajo.descripcion}}</div>
@@ -83,8 +83,8 @@
                                                         <textarea v-model="formEdit.descripcion" class="form-control" placeholder="Descripción del trabajo" style="height: 100px"></textarea>
                                                         <label for="floatingTextarea">Descripción</label>
                                                     </div>
-                                                    <button v-if="editandoDescripcion" type="button" class="btn btn-primary btn-sm" v-on:click="cancelarDescripcion()">Cancelar</button>
                                                     <button v-if="editandoDescripcion" type="button" class="btn btn-primary btn-sm" v-on:click="guardarDescripcion()">Guardar</button>
+                                                    <button v-if="editandoDescripcion" type="button" class="btn btn-light btn-sm" v-on:click="cancelarDescripcion()">Cancelar</button>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -97,7 +97,7 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-1 align-self-center">
-                                                    <div class="h3 ml-auto"><small><button v-on:click="guardarEstado(this.c_trabajo.tipo_trabajo,'tipo_trabajo')"><i class="fas fa-save"></i></button></small></div>
+                                                    <div class="h3 ml-auto"><small><button v-on:click="guardarEstado(this.c_trabajo.tipo_trabajo,'tipo_trabajo')" data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Guardar Estado'"><i class="fas fa-save"></i></button></small></div>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -110,7 +110,7 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-1 align-self-center">
-                                                    <div class="h3 ml-auto"><small><button v-on:click="guardarEstado(this.c_trabajo.cotizacion_estado,'cotizacion_estado')"><i class="fas fa-save"></i></button></small></div>
+                                                    <div class="h3 ml-auto"><small><button v-on:click="guardarEstado(this.c_trabajo.cotizacion_estado,'cotizacion_estado')" data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Guardar Estado'"><i class="fas fa-save"></i></button></small></div>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -123,7 +123,7 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-1 align-self-center">
-                                                    <div class="h3 ml-auto"><small><button v-on:click="guardarEstado(this.c_trabajo.avance_estado,'avance_estado')"><i class="fas fa-save"></i></button></small></div>
+                                                    <div class="h3 ml-auto"><small><button v-on:click="guardarEstado(this.c_trabajo.avance_estado,'avance_estado')" data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Guardar Estado'"><i class="fas fa-save"></i></button></small></div>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -192,7 +192,7 @@
                                                                     <td>{{ equipo.potencia }}</td>
                                                                     <td>{{ equipo.tiempo_uso }}</td>
                                                                     <td>{{ equipo.potencia * equipo.tiempo_uso / 1000 }}</td>
-                                                                    <td><button v-on:click="eliminarPotencia(i)"><i class="fas fa-trash pr-1"></i></button>
+                                                                    <td><button v-on:click="eliminarPotencia(i)"  data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Eliminar Potencia'"><i class="fas fa-trash pr-1"></i></button>
                                                                     </td>
                                                                 </tr>
                                                                 <tr v-if="agregandoPotencia">
@@ -200,8 +200,8 @@
                                                                     <td><input type="text" style="width: 60px" v-model="formPotencia.potencia" placeholder="Potencia"></td>
                                                                     <td><input type="text" style="width: 60px" v-model="formPotencia.tiempo_uso" placeholder="Tiempo de uso"></td>
                                                                     <td><input type="text" style="width: 60px" readonly class="form-control-plaintext" :value="formPotencia.potencia * formPotencia.tiempo_uso / 1000"></td>
-                                                                    <td><button v-on:click="agregarPotencia()"><i class="fas fa-save pr-1"></i></button>
-                                                                        <button v-on:click="agregandoPotencia = false, formPotencia.reset('aparato', 'potencia', 'tiempo_uso')"><i class="fas fa-trash"></i></button>
+                                                                    <td><button v-on:click="agregarPotencia()" data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Agregar Potencia'"><i class="fas fa-save pr-1"></i></button>
+                                                                        <button v-on:click="agregandoPotencia = false, formPotencia.reset('aparato', 'potencia', 'tiempo_uso')"  data-bs-toggle="tooltip" data-bs-placement="bottom" :title="'Cancelar'"><i class="fas fa-trash"></i></button>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
@@ -249,7 +249,7 @@
                                             <div class="row">
                                                 <div class="col-12 d-flex">
                                                     <h3>Agendamientos</h3>
-                                                    <div class="h3 ml-auto" v-if="!agendando"><small><button v-on:click="agendar()"><i class="fas fa-plus"></i> Agendar</button></small></div>
+                                                    <div class="h5 ml-auto mt-auto" v-if="!agendando"><small><button v-on:click="agendar()"><i class="fas fa-plus"></i> Agendar</button></small></div>
                                                 </div>
                                                 <div v-if="agendando" class="col-12 px-0 fs-6">
                                                     <div class="p-3 shadow mb-2 bg-body rounded">
@@ -287,7 +287,7 @@
                                             <div class="row">
                                                 <div class="col-12 d-flex">
                                                     <h3>Materiales</h3>
-                                                    <div class="h3 ml-auto" v-if="!agregandoMaterial"><small><button v-on:click="material()"><i class="fas fa-plus"></i> Agregar</button></small></div>
+                                                    <div class="h5 ml-auto mt-auto" v-if="!agregandoMaterial"><small><button v-on:click="material()"><i class="fas fa-plus"></i> Agregar</button></small></div>
                                                 </div>
                                                 <div v-if="agregandoMaterial" class="col-12 px-0 fs-6">
                                                     <div class="shadow p-3 mb-2 bg-body rounded">

@@ -7,9 +7,9 @@
                     <div class="py-2">
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                                <div class="p-6 bg-white border-b border-gray-200">
+                                <div class="px-6 py-3 bg-white border-b border-gray-200">
                                     <nav aria-label="breadcrumb">
-                                        <ol class="breadcrumb">
+                                        <ol class="breadcrumb my-auto">
                                             <li class="breadcrumb-item"><inertia-link :href="route('dashboard')">Inicio</inertia-link></li>
                                             <li class="breadcrumb-item active" aria-current="page">Trabajos</li>
                                         </ol>
@@ -47,10 +47,12 @@
                                             </inertia-link>
                                         </div>
                                         <div class="col py-1 m-auto">
-                                            <inertia-link class="btn btn-success btn-lg" :href="route('trabajos.show',dato.id)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver Trabajo">
+                                            <div class="btn-group" role="group" aria-label="opciones">
+                                            <inertia-link class="btn btn-success" :href="route('trabajos.show',dato.id)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver Trabajo">
                                                 Ver
                                             </inertia-link>
-                                            <button type="button" class="btn btn-danger btn-lg" v-on:click="deleteItem(dato.id)">Eliminar</button>
+                                            <button type="button" class="btn btn-danger" v-on:click="deleteItem(dato.id)">Eliminar</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -92,8 +94,10 @@
                                             <button type="button" class="btn btn-success btn-sm" v-on:click="this.agregandoCliente = true">Agregar Nuevo Cliente</button>
                                         </div>
                                         <div class="col-md">
-                                            <button type="submit" class="btn btn-success btn-lg btn-block">Agregar</button>
-                                            <button type="button" class="btn btn-danger btn-lg btn-block" v-on:click="this.agregando = false, this.form.reset('nombre_trabajo', 'ubicacion','descripcion', 'cliente_id')">Cancelar</button>
+                                            <div class="btn-group-vertical" role="group" aria-label="opciones">
+                                                <button type="submit" class="btn btn-success btn-block">Agregar</button>
+                                                <button type="button" class="btn btn-danger btn-block" v-on:click="this.agregando = false, this.form.reset('nombre_trabajo', 'ubicacion','descripcion', 'cliente_id')">Cancelar</button>
+                                            </div>
                                         </div>
                                     </div>
                                     </form>
@@ -137,8 +141,8 @@
                                             </div>
                                             <div class="col-md">
                                                 <div class="btn-group" role="group" aria-label="opciones">
-                                                    <button type="submit" class="btn btn-success btn-lg">Agregar</button>
-                                                    <button type="submit" class="btn btn-danger btn-lg" v-on:click="this.agregandoCliente = false, formCliente.reset('nombres', 'apellidos')">Cancelar</button>
+                                                    <button type="submit" class="btn btn-success">Agregar</button>
+                                                    <button type="submit" class="btn btn-danger" v-on:click="this.agregandoCliente = false, formCliente.reset('nombres', 'apellidos')">Cancelar</button>
                                                 </div>
                                             </div>
                                     </div>
@@ -203,7 +207,8 @@
         computed: {
             filteredItems() {
             return this.c_trabajos.filter(item => {
-                return item.nombre_trabajo.toLowerCase().indexOf(this.search.toLowerCase()) > -1
+                let trabajo = item.cliente.nombres + ' ' + item.cliente.apellidos + ' ' + item.ubicacion + ' ' + item.nombre_trabajo + ' ' + item.descripcion + ' ' + item.codigo_trabajo
+                return trabajo.toLowerCase().indexOf(this.search.toLowerCase()) > -1
             })
             }
         },

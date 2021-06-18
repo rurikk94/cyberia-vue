@@ -56,6 +56,7 @@ Route::post('/materiales',[MaterialController::class, 'store'])->middleware(['au
 Route::delete('/materiales/{id}',[MaterialController::class, 'destroy'])->middleware(['auth', 'verified'])->name('materiales.delete');
 Route::put('/materiales/{id}',[MaterialController::class, 'update'])->middleware(['auth', 'verified'])->name('materiales.update');
 Route::post('/materiales/{id}/imagen',[MaterialController::class, 'store_imagen'])->middleware(['auth', 'verified'])->name('materiales.imagen.add');
+Route::delete('/materiales/{id}/imagen',[MaterialController::class, 'destroy_imagen'])->middleware(['auth', 'verified'])->name('materiales.imagen.delete');
 
 Route::get('/negocios/{id}/material', [NegocioMaterialController::class, 'show'])->middleware(['auth', 'verified'])->name('negocios.material');
 Route::post('/negocios/{id}/material', [NegocioMaterialController::class, 'store'])->middleware(['auth', 'verified'])->name('negocios.material.add');

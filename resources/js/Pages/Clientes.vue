@@ -7,9 +7,9 @@
                     <div class="py-2">
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                                <div class="p-6 bg-white border-b border-gray-200">
+                                <div class="px-6 py-3 bg-white border-b border-gray-200">
                                     <nav aria-label="breadcrumb">
-                                        <ol class="breadcrumb">
+                                        <ol class="breadcrumb my-auto">
                                             <li class="breadcrumb-item"><inertia-link :href="route('dashboard')">Inicio</inertia-link></li>
                                             <li class="breadcrumb-item active" aria-current="page">Clientes</li>
                                         </ol>
@@ -45,13 +45,13 @@
                                             <div class="col-md">
                                                 <div class="form-floating">
                                                 <input type="text" class="form-control" name="nombres" id="nombres" v-model="form.nombres" required placeholder="nombres">
-                                                <label for="nombres">nombres</label>
+                                                <label for="nombres">Nombres</label>
                                                 </div>
                                             </div>
                                             <div class="col-md">
                                                 <div class="form-floating">
                                                 <input type="text" class="form-control" name="apellidos" id="apellidos" v-model="form.apellidos" required placeholder="apellidos">
-                                                <label for="apellidos">apellidos</label>
+                                                <label for="apellidos">Apellidos</label>
                                                 </div>
                                             </div>
                                             <div class="col-md">
@@ -73,7 +73,7 @@
                                     <div class="row g-2">
                                             <div class="col-md">
                                                 <div class="form-floating">
-                                                <input type="text" class="form-control" name="nombres" id="nombres" v-model="formEdit.nombres" required placeholder="nombres">
+                                                <input type="text" class="form-control" name="nombres" id="nombres" v-model="formEdit.nombres" required placeholder="nombres" ref="nombres">
                                                 <label for="nombres">nombres</label>
                                                 </div>
                                             </div>
@@ -104,11 +104,13 @@
                                         <div class="col py-1 m-auto">{{cliente.apellidos}}
                                         </div>
                                         <div class="col py-1 m-auto">
-                                            <inertia-link class="btn btn-success btn-lg" :href="route('clientes.show',cliente.id)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver Detalles del Cliente">
-                                                Ver Detalles
-                                            </inertia-link>
-                                            <button type="button" class="btn btn-primary btn-lg" v-on:click="showEdit(cliente)">Editar</button>
-                                            <button type="button" class="btn btn-danger btn-lg" v-on:click="deleteItem(cliente.id)">Eliminar</button>
+                                            <div class="btn-group">
+                                                <inertia-link class="btn btn-success btn-sm" :href="route('clientes.show',cliente.id)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver Detalles del Cliente">
+                                                    Ver Detalles
+                                                </inertia-link>
+                                                <button type="button" class="btn btn-primary btn-sm" v-on:click="showEdit(cliente), this.$ref.nombres.focus()">Editar</button>
+                                                <button type="button" class="btn btn-danger btn-sm" v-on:click="deleteItem(cliente.id)">Eliminar</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -163,7 +165,8 @@
         computed: {
             filteredItems() {
             return this.current_clientes.filter(item => {
-                return (item.nombres.toLowerCase().indexOf(this.search.toLowerCase()) > -1 || item.apellidos.toLowerCase().indexOf(this.search.toLowerCase()) > -1)
+                let cliente = item.nombres + ' ' + item.apellidos
+                return cliente.toLowerCase().indexOf(this.search.toLowerCase()) > -1
             })
             }
         },

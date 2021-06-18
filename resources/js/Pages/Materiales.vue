@@ -7,9 +7,9 @@
                     <div class="py-2">
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                                <div class="p-6 bg-white border-b border-gray-200">
+                                <div class="px-6 py-3 bg-white border-b border-gray-200">
                                     <nav aria-label="breadcrumb">
-                                        <ol class="breadcrumb">
+                                        <ol class="breadcrumb my-auto">
                                             <li class="breadcrumb-item"><inertia-link :href="route('dashboard')">Inicio</inertia-link></li>
                                             <li class="breadcrumb-item active" aria-current="page">Materiales</li>
                                         </ol>
@@ -24,10 +24,10 @@
                             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                                 <div class="p-6 bg-white border-b border-gray-200">
                                     <div class="row">
-                                        <div class="col-3">
+                                        <div class="col-5">
                                             <h1>Materiales ({{ current_materiales.length }})</h1>
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-7">
                                             <input type="text" v-model="search" placeholder="Busca un material">
                                         </div>
                                     </div>
@@ -82,7 +82,7 @@
                                     <div class="row g-2">
                                             <div class="col-md">
                                                 <div class="form-floating">
-                                                <input type="text" class="form-control" name="nombre" id="nombre" v-model="formEdit.nombre" required placeholder="nombre">
+                                                <input type="text" class="form-control" name="nombre" id="nombre" ref="nombre" v-model="formEdit.nombre" required placeholder="nombre">
                                                 <label for="nombre">Nombre</label>
                                                 </div>
                                             </div>
@@ -132,18 +132,17 @@
                             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                                 <div class="p-6 bg-white border-b border-gray-200">
                                     <div class="row" v-for="material in filteredItems" v-bind:key="material.id">
-                                        <div class="col-2 py-1 m-auto">
-                                            <img class="img-fluid" :src="route('dashboard.i') + '/storage/' + material.imagen.replace('public/', '') " alt="" srcset="">
+                                        <div class="col-2 py-1 m-auto text-center">
+                                            <img v-if="material.imagen !== ''" class="img-fluid" :src="route('dashboard.i') + '/storage/' + material.imagen.replace('public/', '') " alt="" srcset="">
                                         </div>
-                                        <div class="col py-1 m-auto">{{material.nombre}}
+                                        <div class="col-1 py-1 m-auto">
+                                            <div class="btn-group-vertical">
+                                                <button v-if="material.imagen !== ''" type="button" class="btn btn-warning btn-sm" v-on:click="borrarImagen(material.id)">Borrar Imagen</button>
+                                                <button type="button" class="btn btn-primary btn-sm" v-on:click="showEdit(material), this.$refs.nombre.focus()">Editar</button>
+                                                <button type="button" class="btn btn-danger btn-sm" v-on:click="deleteItem(material.id)">Eliminar</button>
+                                            </div>
                                         </div>
-                                        <div class="col py-1 m-auto">{{material.marca}}
-                                        </div>
-                                        <div class="col py-1 m-auto">{{material.modelo}}
-                                        </div>
-                                        <div class="col py-1 m-auto">
-                                            <button type="button" class="btn btn-primary btn-lg" v-on:click="showEdit(material)">Editar</button>
-                                            <button type="button" class="btn btn-danger btn-lg" v-on:click="deleteItem(material.id)">Eliminar</button>
+                                        <div class="col-9 py-1 m-auto">{{material.nombre}} {{material.marca}} {{material.modelo}}
                                         </div>
                                     </div>
                                 </div>
@@ -201,7 +200,8 @@
         computed: {
             filteredItems() {
             return this.current_materiales.filter(item => {
-                return item.nombre.toLowerCase().indexOf(this.search.toLowerCase()) > -1
+                let name = item.nombre + ' ' + item.marca + ' ' + item.modelo
+                return name.toLowerCase().indexOf(this.search.toLowerCase()) > -1
             })
             }
         },
@@ -218,6 +218,35 @@
                 })
                 .catch((e) => {
                     this.$moshaToast('Hubo un error',{position: 'bottom-right',type: 'danger', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
+                })
+            },
+            borrarImagen(idItem){
+
+                this.$swal({
+                title: '¿Estás seguro?',
+                text: "No puedes revertir esta eliminación",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, eliminarlo!'
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+
+                        axios.delete(this.route('materiales.imagen.delete',idItem),{params: {
+                            'id': idItem
+                        }})
+                        .then(res => {
+                            var material = parseInt(res.data.material);
+                            this.current_materiales.find(n => n.id === idItem).imagen = ''
+                            this.$moshaToast('Eliminado correctamente',{position: 'bottom-right',type: 'success', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
+                        })
+                        .catch((e) => {
+                            this.$moshaToast('Hubo un error',{position: 'bottom-right',type: 'danger', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
+                        })
+
+                    }
                 })
             },
             deleteItem(idItem) {
@@ -289,6 +318,7 @@
                 })
                 .then(res => {
                     var material = res.data.material;
+                    this.current_materiales.find(n => n.id === idItem).imagen = material.imagen
                     //this.c_trabajo.documentos = this.c_trabajo.documentos.concat(documento);
                     this.file = '';
                     this.$moshaToast('Agregado correctamente',{position: 'bottom-right',type: 'success', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})

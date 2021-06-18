@@ -27,9 +27,11 @@ class MaterialController extends Controller
         $mat =$materiales->toArray();
         $mats = [];
         foreach ($mat as $m) {
-            //if ($m["imagen"] !== '')
+            if ($m["imagen"] !== '')
                 //$m["imagen"] = URL::to('/storage/'.$m["imagen"]);
+                //$m["imagen"] = asset($m["imagen"]);
                 //$m["imagen"] = str_replace("public/","",$m["imagen"]);
+                //$asd = Storage::url($m["imagen"]);
             $mats[] = $m;
         }
 
@@ -61,7 +63,7 @@ class MaterialController extends Controller
             'nombre' => 'required|string|max:191',
             'marca' => 'required|string|max:191',
             'modelo' => 'required|string|max:191',
-            'link' => 'string|max:191',
+            //'link' => 'string|max:191',
         ]);
 
 
@@ -71,7 +73,7 @@ class MaterialController extends Controller
         $material->nombre = $request->nombre;
         $material->marca = $request->marca;
         $material->modelo = $request->modelo;
-        $material->link = $request->link;
+        //$material->link = $request->link;
         $material->electricista_id = $user->id;
 
         $material->save();
@@ -146,7 +148,7 @@ class MaterialController extends Controller
             'nombre' => 'required|string|max:191',
             'marca' => 'required|string|max:191',
             'modelo' => 'required|string|max:191',
-            'link' => 'string|max:191',
+            //'link' => 'string|max:191',
         ]);
 
         $material = Material::find($id);
@@ -155,7 +157,7 @@ class MaterialController extends Controller
         $material->nombre = $request->nombre;
         $material->marca = $request->marca;
         $material->modelo = $request->modelo;
-        $material->link = $request->link;
+        //$material->link = $request->link;
 
         $material->save();
 
@@ -179,6 +181,30 @@ class MaterialController extends Controller
         Material::destroy($id);
         return response()->json([
             'material' => $id
+        ], 200);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy_imagen(Request $request, $id)
+    {
+        //
+        $user = Auth::user();
+
+        $material = Material::find($id);
+
+        $material->imagen = '';
+
+        
+        $material->save();
+
+        $data = $material->refresh()->toArray();
+        return response()->json([
+            'material' => $data
         ], 200);
     }
 }

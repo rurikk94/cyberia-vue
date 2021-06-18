@@ -7,9 +7,9 @@
                     <div class="py-2">
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                                <div class="p-6 bg-white border-b border-gray-200">
+                                <div class="px-6 py-3 bg-white border-b border-gray-200">
                                     <nav aria-label="breadcrumb">
-                                        <ol class="breadcrumb">
+                                        <ol class="breadcrumb my-auto">
                                             <li class="breadcrumb-item"><inertia-link :href="route('dashboard')">Inicio</inertia-link></li>
                                             <li class="breadcrumb-item active" aria-current="page">Negocios</li>
                                         </ol>
@@ -75,7 +75,7 @@
                                     <div class="row g-2">
                                             <div class="col-md">
                                                 <div class="form-floating">
-                                                <input type="text" class="form-control" name="nombre" id="nombre" v-model="formEdit.nombre" required placeholder="nombre">
+                                                <input type="text" class="form-control" name="nombre" id="nombre" v-model="formEdit.nombre" required placeholder="nombre" ref="nombre">
                                                 <label for="nombre">Nombre</label>
                                                 </div>
                                             </div>
@@ -106,14 +106,13 @@
                                         <div class="col py-1 m-auto">{{negocio.ubicacion}}
                                         </div>
                                         <div class="col py-1 m-auto">
-                                            <button type="button" class="btn btn-primary btn-lg" v-on:click="showEdit(negocio)">Editar</button>
-                                            <button type="button" class="btn btn-danger btn-lg" v-on:click="deleteItem(negocio.id)">Eliminar</button>
-
-                                            <inertia-link class="btn btn-success btn-lg" :href="route('negocios.material',negocio.id)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver Materiales del Negocio">
-                                                Materiales
-                                            </inertia-link>
-
-                                            <!-- <a class="btn btn-success btn-lg" :href="route('negocios.material',negocio.id)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver Materiales del Negocio">Ver Materiales</a> -->
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-primary btn-sm" v-on:click="showEdit(negocio), this.$ref.nombre.focus()">Editar</button>
+                                                <button type="button" class="btn btn-danger btn-sm" v-on:click="deleteItem(negocio.id)">Eliminar</button>
+                                                <inertia-link class="btn btn-success btn-sm" :href="route('negocios.material',negocio.id)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver Materiales del Negocio">
+                                                    Ver Materiales
+                                                </inertia-link>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -173,7 +172,8 @@
         computed: {
             filteredItems() {
             return this.current_negocios.filter(item => {
-                return item.nombre.toLowerCase().indexOf(this.search.toLowerCase()) > -1
+                let negocio = item.nombre + ' ' + item.ubicacion
+                return negocio.toLowerCase().indexOf(this.search.toLowerCase()) > -1
             })
             }
         },

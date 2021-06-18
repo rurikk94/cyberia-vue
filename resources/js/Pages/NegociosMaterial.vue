@@ -7,9 +7,9 @@
                     <div class="py-2">
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                                <div class="p-6 bg-white border-b border-gray-200">
+                                <div class="px-6 py-3 bg-white border-b border-gray-200">
                                     <nav aria-label="breadcrumb">
-                                        <ol class="breadcrumb">
+                                        <ol class="breadcrumb my-auto">
                                             <li class="breadcrumb-item"><inertia-link :href="route('dashboard')">Inicio</inertia-link></li>
                                             <li class="breadcrumb-item"><inertia-link :href="route('negocios')">Negocios</inertia-link></li>
                                             <li class="breadcrumb-item active" aria-current="page">Materiales de {{ c_negocio.nombre }}</li>
@@ -24,7 +24,12 @@
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                                 <div class="p-6 bg-white border-b border-gray-200">
-                                    <h1>Materiales del Negocio {{ c_negocio.nombre }} ({{ c_materiales_negocio.length }})</h1>
+                                    <div class="col-5">
+                                    <h1>Materiales de {{ c_negocio.nombre }} ({{ c_materiales_negocio.length }})</h1>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="text" v-model="search" placeholder="Busca un material">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -36,6 +41,9 @@
                                 <div class="p-6 bg-white border-b border-gray-200">
                                     <form @submit.prevent="add">
                                     <div class="row g-2">
+                                            <div class="col-12">
+                                                <p>Esta sección le permite agregar materiales a un negocio en especifico, indicando su precio y opcionalmente un enlace a una web donde vió el producto.</p>
+                                            </div>
                                             <div class="col-md">
                                                 <div class="form-floating">
                                                       <label for="material">Material</label>
@@ -80,8 +88,8 @@
                                             </div>
                                             <div class="col-md">
                                                 <div class="form-floating">
-                                                <input type="number" class="form-control" name="precio" id="precio" v-model="formEdit.precio" required placeholder="precio">
-                                                <label for="precio">precio</label>
+                                                <input type="number" class="form-control" name="precio" id="precio" v-model="formEdit.precio" required placeholder="precio" ref="precio">
+                                                <label for="precio">Precio</label>
                                                 </div>
                                             </div>
                                             <div class="row g-2">
@@ -108,28 +116,32 @@
                             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                                 <div class="p-6 bg-white border-b border-gray-200">
                                     <div class="row">
+                                        <div class="col-2 py-1 m-auto">
+                                        </div>
+                                        <div class="col-1 py-1 m-auto">
+                                        </div>
                                         <div class="col py-1 m-auto">Material
                                         </div>
                                         <div class="col py-1 m-auto">Precio
                                         </div>
-                                        <div class="col py-1 m-auto"> Enlace
-                                        </div>
-                                        <div class="col py-1 m-auto">
+                                        <div class="col py-1 m-auto">Enlace
                                         </div>
                                     </div>
-                                    <div class="row" v-for="material in c_materiales_negocio" v-bind:key="material.id">
+                                    <div class="row" v-for="material in filteredItems" v-bind:key="material.id">
                                         <div class="col-2 py-1 m-auto">
-                                            <img class="img-fluid" :src="route('dashboard.i') + '/storage/' + material.material.imagen.replace('public/', '') " alt="" srcset="">
+                                            <img  v-if="material.material.imagen !== ''" class="img-fluid" :src="route('dashboard.i') + '/storage/' + material.material.imagen.replace('public/', '') " alt="" srcset="">
+                                        </div>
+                                        <div class="col-1 py-1 m-auto">
+                                            <div class="btn-group-vertical">
+                                                <button type="button" class="btn btn-primary btn-sm" v-on:click="showEdit(material), this.$refs.precio.focus()">Editar</button>
+                                                <button type="button" class="btn btn-danger btn-sm" v-on:click="deleteItem(material.id)">Eliminar</button>
+                                            </div>
                                         </div>
                                         <div class="col py-1 m-auto">{{material.material.nombre}} {{material.material.marca}} {{material.material.modelo}}
                                         </div>
                                         <div class="col py-1 m-auto">{{'$ ' + material.precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")  }}
                                         </div>
                                         <div class="col py-1 m-auto"><a :href="material.link" target="_blank" rel="noopener noreferrer">{{ material.link }}</a> 
-                                        </div>
-                                        <div class="col py-1 m-auto">
-                                            <button type="button" class="btn btn-primary btn-lg" v-on:click="showEdit(material)">Editar</button>
-                                            <button type="button" class="btn btn-danger btn-lg" v-on:click="deleteItem(material.id)">Eliminar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -164,7 +176,7 @@
 
         data() {
             return {
-                c_materiales_negocio: Object,
+                c_materiales_negocio: [],
                 c_materiales: Object,
                 c_negocio: Object,
                 form: this.$inertia.form({
@@ -179,6 +191,16 @@
                     link: '',
                 }),
                 editando: false,
+                search: ''
+            }
+        },
+        
+        computed: {
+            filteredItems() {
+            return this.c_materiales_negocio.filter(item => {
+                let name = item.material.nombre + ' ' + item.material.marca + ' ' + item.material.modelo + ' ' +item.precio
+                return name.toLowerCase().indexOf(this.search.toLowerCase()) > -1
+            })
             }
         },
 
