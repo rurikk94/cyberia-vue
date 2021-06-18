@@ -24,7 +24,7 @@
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                                 <div class="p-6 bg-white border-b border-gray-200">
-                                    <div class="col-5">
+                                    <div class="col-12">
                                     <h1>Materiales de {{ c_negocio.nombre }} ({{ c_materiales_negocio.length }})</h1>
                                     </div>
                                     <div class="col-6">
@@ -42,7 +42,7 @@
                                     <form @submit.prevent="add">
                                     <div class="row g-2">
                                             <div class="col-12">
-                                                <p>Esta sección le permite agregar materiales a un negocio en especifico, indicando su precio y opcionalmente un enlace a una web donde vió el producto.</p>
+                                                <p>Esta sección le permite agregar <strong>Materiales</strong> a un <strong>negocio</strong> en especifico, deberás indicar su precio y opcionalmente agregar un  enlace a un sitio web donde viste el producto.</p>
                                             </div>
                                             <div class="col-md">
                                                 <div class="form-floating">
@@ -141,7 +141,7 @@
                                         </div>
                                         <div class="col py-1 m-auto">{{'$ ' + material.precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")  }}
                                         </div>
-                                        <div class="col py-1 m-auto"><a :href="material.link" target="_blank" rel="noopener noreferrer">{{ material.link }}</a> 
+                                        <div class="col py-1 m-auto"><a :href="material.link" target="_blank" rel="noopener noreferrer">{{ material.link }}</a>
                                         </div>
                                     </div>
                                 </div>
@@ -194,7 +194,7 @@
                 search: ''
             }
         },
-        
+
         computed: {
             filteredItems() {
             return this.c_materiales_negocio.filter(item => {

@@ -44,6 +44,9 @@
                                 <div class="p-6 bg-white border-b border-gray-200">
                                     <form @submit.prevent="add">
                                     <div class="row g-2">
+                                            <div class="col-12">
+                                                <p>Agrega un <strong>Negocio</strong> a tu página, de esta forma podrás asignarle <strong>Materiales</strong> y después, podrás agregarla a un trabajo, y podrás cotizar.</p>
+                                            </div>
                                             <div class="col-md">
                                                 <div class="form-floating">
                                                 <input type="text" class="form-control" name="nombre" id="nombre" v-model="form.nombre" required placeholder="nombre">

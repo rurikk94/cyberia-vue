@@ -43,6 +43,9 @@
                                 <div class="p-6 bg-white border-b border-gray-200">
                                     <form @submit.prevent="add">
                                     <div class="row g-2">
+                                            <div class="col-12">
+                                                <p>Agrega un <strong>Material</strong> a tu página, de esta forma podrás asignarla, después, a un <strong>Negocio</strong> y podrás agregarla a un trabajo, y poder cotizar.</p>
+                                            </div>
                                             <div class="col-md">
                                                 <div class="form-floating">
                                                 <input type="text" class="form-control" name="nombre" id="nombre" v-model="form.nombre" required placeholder="nombre">
@@ -102,7 +105,7 @@
                                             </div>
                                     </div>
                                     <div class="row g-2">
-                                            <div class="col-md">                                                
+                                            <div class="col-md">
                                                 <input type="file" id="file" ref="file" v-on:change="handleFileUpload()" style="position: absolute;top: -500px;"/>
                                                 <div class="card text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Subir foto">
                                                     <div class="card-body" v-on:click="$refs.file.click()" role="button">
@@ -133,6 +136,7 @@
                                 <div class="p-6 bg-white border-b border-gray-200">
                                     <div class="row" v-for="material in filteredItems" v-bind:key="material.id">
                                         <div class="col-2 py-1 m-auto text-center">
+                                            <button v-if="material.imagen == ''"  type="button" class="btn btn-primary btn-sm" v-on:click="showEdit(material)">Agregar foto</button>
                                             <img v-if="material.imagen !== ''" class="img-fluid" :src="route('dashboard.i') + '/storage/' + material.imagen.replace('public/', '') " alt="" srcset="">
                                         </div>
                                         <div class="col-1 py-1 m-auto">
@@ -303,10 +307,10 @@
                 .catch((e) => {
                     this.$moshaToast('Hubo un error',{position: 'bottom-right',type: 'danger', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
                 })
-            },   
+            },
             handleFileUpload(){
                 this.file = this.$refs.file.files[0];
-            },         
+            },
             submitFile(material){
                 let formData = new FormData();
                 formData.append("material_id", material.id);
@@ -318,13 +322,14 @@
                 })
                 .then(res => {
                     var material = res.data.material;
-                    this.current_materiales.find(n => n.id === idItem).imagen = material.imagen
+                    this.current_materiales.find(n => n.id === material.id).imagen = material.imagen
                     //this.c_trabajo.documentos = this.c_trabajo.documentos.concat(documento);
                     this.file = '';
                     this.$moshaToast('Agregado correctamente',{position: 'bottom-right',type: 'success', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
 
                 })
                 .catch((e) => {
+                    console.log(e)
                     this.$moshaToast('Hubo un error',{position: 'bottom-right',type: 'danger', transition: 'slide', showCloseButton: 'true', showIcon: 'true', hideProgressBar: 'true', swipeClose: 'true'})
                 })
 

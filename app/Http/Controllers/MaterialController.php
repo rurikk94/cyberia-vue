@@ -27,7 +27,7 @@ class MaterialController extends Controller
         $mat =$materiales->toArray();
         $mats = [];
         foreach ($mat as $m) {
-            if ($m["imagen"] !== '')
+            //if ($m["imagen"] !== '')
                 //$m["imagen"] = URL::to('/storage/'.$m["imagen"]);
                 //$m["imagen"] = asset($m["imagen"]);
                 //$m["imagen"] = str_replace("public/","",$m["imagen"]);
@@ -73,7 +73,7 @@ class MaterialController extends Controller
         $material->nombre = $request->nombre;
         $material->marca = $request->marca;
         $material->modelo = $request->modelo;
-        //$material->link = $request->link;
+        $material->imagen = '';
         $material->electricista_id = $user->id;
 
         $material->save();
@@ -111,7 +111,7 @@ class MaterialController extends Controller
             'material' => $data
         ], 200);
     }
-    
+
 
     /**
      * Display the specified resource.
@@ -199,7 +199,7 @@ class MaterialController extends Controller
 
         $material->imagen = '';
 
-        
+
         $material->save();
 
         $data = $material->refresh()->toArray();

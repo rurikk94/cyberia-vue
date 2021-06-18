@@ -44,7 +44,7 @@ class NegocioMaterialController extends Controller
         $validated = $request->validate([
             'material' => 'required|integer',
             'precio' => 'required|integer',
-            'link' => 'string',
+            'link' => 'nullable|string',
         ]);
 
 
@@ -68,7 +68,12 @@ class NegocioMaterialController extends Controller
         $material->material_id = $request->material;
         $material->negocio_id = $id;
         $material->precio = $request->precio;
-        $material->link = $request->link;
+        if (is_null($request->link))
+        {
+            $material->link = '';
+        }else {
+            $material->link = $request->link;
+        }
 
         $material->save();
         $material->refresh();

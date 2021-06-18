@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use App\Models\Agendamiento;
+use App\Models\MetadatosCliente;
 use Carbon\Carbon;
 
 class InicioController extends Controller
@@ -49,6 +50,7 @@ class InicioController extends Controller
                 ->selectRaw('*')
                 ->where('tipo_trabajo', $t["key"])
                 ->where('electricista_id', $user->id)
+                ->whereNull('deleted_at')
                 ->count();
 
             $estadisticas["tipo_trabajos"][]= [
@@ -64,6 +66,7 @@ class InicioController extends Controller
                 ->selectRaw('*')
                 ->where('avance_estado', $t["key"])
                 ->where('electricista_id', $user->id)
+                ->whereNotNull('deleted_at')
                 ->count();
 
             $estadisticas["estado_avance"][]= [
@@ -76,16 +79,19 @@ class InicioController extends Controller
         $estadisticas["trabajos"] = DB::table('trabajos')
                                     ->selectRaw('*')
                                     ->where('electricista_id', $user->id)
+                                    ->whereNull('deleted_at')
                                     ->count();
         $estadisticas["trabajos_realizados"] = DB::table('trabajos')
                                     ->selectRaw('*')
                                     ->where('avance_estado', 5)
                                     ->where('electricista_id', $user->id)
+                                    ->whereNull('deleted_at')
                                     ->count();
         $estadisticas["trabajos_por_hacer"] = DB::table('trabajos')
                                     ->selectRaw('*')
                                     ->where('avance_estado','<>',5)
                                     ->where('electricista_id', $user->id)
+                                    ->whereNull('deleted_at')
                                     ->count();
 
         $ahora = Carbon::now();
@@ -107,21 +113,31 @@ class InicioController extends Controller
                             ->where('fecha_hora_inicio', '>', $ahora)
                             ->count();
 
-/*
-        $estadisticas["tipo_trabajos"] = [
-            ["tipo_trabajos" => 1, "cantidad" => 5],
-            ["tipo_trabajos" => 2, "cantidad" => 7],
-            ["tipo_trabajos" => 3, "cantidad" => 8],
-        ]; */
-/*
-        $estadisticas["estado_avance"] = [
-            ["estado_avance" => 0, "cantidad" => 1],
-            ["estado_avance" => 1, "cantidad" => 2],
-            ["estado_avance" => 2, "cantidad" => 3],
-            ["estado_avance" => 3, "cantidad" => 5],
-            ["estado_avance" => 4, "cantidad" => 5],
-            ["estado_avance" => 5, "cantidad" => 5],
-        ]; */
+        $estadisticas["materiales"] = DB::table('materials')
+                                        ->selectRaw('*')
+                                        ->where('electricista_id', $user->id)
+                                        ->whereNull('deleted_at')
+                                        ->count();
+        $estadisticas["negocios"] = DB::table('negocios')
+                                        ->selectRaw('*')
+                                        ->where('electricista_id', $user->id)
+                                        ->whereNull('deleted_at')
+                                        ->count();
+        $estadisticas["negocio_materials"] = DB::table('negocio_materials')
+                                        ->selectRaw('*')
+                                        ->where('electricista_id', $user->id)
+                                        ->whereNull('deleted_at')
+                                        ->count();
+        $estadisticas["clientes"] = DB::table('clientes')
+                                        ->selectRaw('*')
+                                        ->where('electricista_id', $user->id)
+                                        ->whereNull('deleted_at')
+                                        ->count();
+        $estadisticas["metadata"] = DB::table('metadatos_usuarios')
+                                        ->selectRaw('*')
+                                        ->where('user_id', $user->id)
+                                        ->whereNull('deleted_at')
+                                        ->count();
 
         return Inertia::render('Dashboard',[
             'estado_avance' => $estado_avance,
