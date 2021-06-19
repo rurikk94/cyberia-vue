@@ -120,7 +120,7 @@ class TrabajoController extends Controller
              ->join('materials', 'materials.id', '=', 'negocio_materials.material_id')
              //->join('negocios', 'negocios.id', '=', 'negocio_materials.negocio_id')
              ->where('negocio_materials.electricista_id', $user->id)
-             ->groupBy('negocio_materials.material_id')
+             ->groupBy('negocio_materials.material_id', 'materials.nombre', 'materials.marca', 'materials.modelo')
              ->orderBy('materials.nombre')
              ->get();
 
