@@ -22,10 +22,10 @@ class CreateNegocioMaterialsTable extends Migration
             $table->foreignId('electricista_id')->constrained('users')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            $table->foreignId('material_id')->constrained('material')
+            $table->foreignId('material_id')->constrained('materials')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            $table->foreignId('negocio_id')->constrained('negocio')
+            $table->foreignId('negocio_id')->constrained('negocios')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
         });
