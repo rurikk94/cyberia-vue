@@ -14,10 +14,10 @@ class AddImagenAndLinkToMaterialsTable extends Migration
     public function up()
     {
         Schema::table('materials', function (Blueprint $table) {
-            $table->string('imagen');
+            $table->string('imagen')->nullable();
         });
         Schema::table('negocio_materials', function (Blueprint $table) {
-            $table->string('link');
+            $table->string('link')->nullable();
         });
     }
 

@@ -54,7 +54,7 @@ class TrabajoMaterialController extends Controller
 
         $material->trabajo_id  = $trabajo->id;
         $material->negocio_material_id  = $negocio_material->negocio_id;
-        $material->material_id  = $negocio_material->material_id;
+        $material->material_id  = $negocio_material->material->id;
         $material->cantidad  = $request->cantidad;
 
         $material->precio  = $negocio_material->precio;

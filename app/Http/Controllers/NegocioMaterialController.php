@@ -137,7 +137,7 @@ class NegocioMaterialController extends Controller
     {
         $validated = $request->validate([
             'precio' => 'required|integer',
-            'link' => 'string',
+            'link' => 'nullable|string',
         ]);
 
         $material = NegocioMaterial::find($id);
